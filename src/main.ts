@@ -1,9 +1,13 @@
 import Player from "./classes/Player"
 import Platform from "./classes/Platform"
 import AudioManager from "./classes/AudioManager"
+import Renderer from "./classes/Renderer"
+import { resolveTypeReferenceDirective } from "../node_modules/typescript/lib/typescript"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
+const playerStartPos = { x: 100, y: 100 }
+const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
 
 export const app = {
     canvas,
@@ -13,8 +17,9 @@ export const app = {
         height: window.innerHeight,
         rerenderStep: 20 // higher = better performance
     },
-    gravity: 2,
-    audioManager
+    gravity: 3,
+    audioManager,
+    renderer
 }
 
 export const pressedKeys = {
@@ -38,23 +43,21 @@ function startGame() {
     // app.audioManager.play()
 
     // create player
-    const player = new Player()
-    const platform = new Platform(200, 950)
-
-    gameObjects.platforms.push(platform)
-
+    const player = new Player(playerStartPos.x, playerStartPos.y)
     player.draw()
     
     // animate game
     function startAnim() {
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
-        platform.draw()
         player.update()
+
+        // initialize renderer (it will automatically render new objects and delte unnecessary ones)
+        renderer.trackRendering()
+        renderer.updateGameObjects()
         
         
         setTimeout(() => {
             requestAnimationFrame(startAnim)
-            // console.log("render leci");
         }, app.canvasProps.rerenderStep)
     }
     startAnim()
