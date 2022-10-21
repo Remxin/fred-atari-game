@@ -1,6 +1,9 @@
 import Player from "./classes/Player"
 import Platform from "./classes/Platform"
+import AudioManager from "./classes/AudioManager"
+
 const canvas = document.getElementById("main") as HTMLCanvasElement
+const audioManager = new AudioManager()
 
 export const app = {
     canvas,
@@ -8,9 +11,10 @@ export const app = {
     canvasProps: {
         width: window.innerWidth - 5,
         height: window.innerHeight,
-        rerenderStep: 30 // higher = better performance
+        rerenderStep: 20 // higher = better performance
     },
     gravity: 2,
+    audioManager
 }
 
 export const pressedKeys = {
@@ -29,6 +33,9 @@ function startGame() {
     // resize canvas
     app.canvas.width = app.canvasProps.width
     app.canvas.height = app.canvasProps.height - 6
+
+    // play background music
+    // app.audioManager.play()
 
     // create player
     const player = new Player()

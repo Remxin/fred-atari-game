@@ -6,6 +6,7 @@ interface PlayerInterface {
     velocity: { x: number, y: number}
     width: number,
     height: number,
+    jumpHeight: number
     floating: boolean
 }
 class Player implements PlayerInterface {
@@ -13,14 +14,16 @@ class Player implements PlayerInterface {
     velocity: { x: number, y: number }
     height: number
     width: number
+    jumpHeight: number
     floating: boolean
 
     
     constructor() {
         this.position = { x: 100, y: 100}
-        this.velocity = { x: 0, y : 1 }
+        this.velocity = { x: 5, y : 1 }
         this.width = 30,
         this.height = 30
+        this.jumpHeight = 20
         this.floating = true
     }
 
@@ -45,19 +48,32 @@ class Player implements PlayerInterface {
     }
 
     captureMovement() {
+        // right
         if (pressedKeys.right) {
-            // this.velocity.x += 10
-            this.position.x += 10
+            if (this.position.x < 450) { // move player
+                this.position.x += this.velocity.x
+            } else { // --- scroll view ---
+                for (let platfrom of gameObjects.platforms) {
+                    platfrom.position.x -= this.velocity.x
+                }
+            }
         }
 
         if (pressedKeys.left) {
-            this.position.x -= 10
+            if (this.position.x > 100) {
+                this.position.x -= this.velocity.x
+            } else {
+                for (let platform of gameObjects.platforms) {
+                    platform.position.x += this.velocity.x
+                }
+            }
         }
 
         if (pressedKeys.up && !this.floating) {
             this.floating = true
-            this.velocity.y -= 20
+            this.velocity.y -= this.jumpHeight
         }
+
     }
 
     checkCollisions() {
