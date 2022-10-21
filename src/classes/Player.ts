@@ -55,25 +55,47 @@ class Player implements PlayerInterface {
 
     captureMovement() {
         // right
-        if (pressedKeys.right && !this.blocks.right) {
-            app.renderer.playerAbstractionPos.x += this.velocity.x
-            if (this.position.x < 450) { // move player
-                this.position.x += this.velocity.x
-            } else { // --- scroll view ---
-                for (let platfrom of gameObjects.platforms) {
-                    platfrom.position.x -= this.velocity.x
+        if (pressedKeys.right) {
+            
+            let isCollision = false
+            for (let platform of gameObjects.platforms) {
+                if (this.position.x + this.width + this.velocity.x > platform.position.x && this.position.x < platform.position.x + platform.width && this.position.y <= platform.position.y && this.position.y + this.height >= platform.position.y + platform.height) {
+                    isCollision = true
+                    this.position.x = platform.position.x - this.width
+                }
+            }
+            // if no collision
+            if (!isCollision) {
+                app.renderer.playerAbstractionPos.x += this.velocity.x
+                if (this.position.x < 450) { // move player
+                    this.position.x += this.velocity.x
+                } else { // --- scroll view ---
+                    for (let platfrom of gameObjects.platforms) {
+                        platfrom.position.x -= this.velocity.x
+                    }
                 }
             }
         }
 
         // left
-        if (pressedKeys.left && !this.blocks.left) {
-            app.renderer.playerAbstractionPos.x -= this.velocity.x
-            if (this.position.x > 100) {
-                this.position.x -= this.velocity.x
-            } else {
-                for (let platform of gameObjects.platforms) {
-                    platform.position.x += this.velocity.x
+        if (pressedKeys.left) {
+            
+            let isCollision = false
+            for (let platform of gameObjects.platforms) {
+                if (this.position.x - this.velocity.x < platform.position.x + platform.width && this.position.x + this.width > platform.position.x && this.position.y <= platform.position.y && this.position.y + this.height >= platform.position.y + platform.height) {
+                    this.position.x = platform.position.x + platform.width
+                    isCollision = true
+                } 
+            }
+            
+            if (!isCollision) {
+                app.renderer.playerAbstractionPos.x -= this.velocity.x
+                if (this.position.x > 100) {
+                    this.position.x -= this.velocity.x
+                } else {
+                    for (let platform of gameObjects.platforms) {
+                        platform.position.x += this.velocity.x
+                    }
                 }
             }
         }
@@ -84,8 +106,9 @@ class Player implements PlayerInterface {
            
             let isCollision = false
             for (let platform of gameObjects.platforms) {
-                if (this.position.x + this.width >= platform.position.x && this.position.x <= platform.position.x + platform.width && this.position.y - (this.jumpHeight*2) <= platform.position.y + platform.height && this.position.y + this.height - this.jumpHeight >= platform.position.y) {
+                if (this.position.x + this.width >= platform.position.x && this.position.x <= platform.position.x + platform.width && this.position.y - (this.jumpHeight*app.gravity) <= platform.position.y + platform.height && this.position.y + this.height - this.jumpHeight >= platform.position.y) {
                     this.position.y = platform.position.y + platform.height
+                    // this.velocity.y -= platform.position.y + platform.height
                     isCollision = true
                 }
             }
@@ -101,35 +124,18 @@ class Player implements PlayerInterface {
     checkCollisions() {
 
         for (let platform of gameObjects.platforms) {
-            // dropping down collision
+            // dropping down collision 
             if (this.position.y + this.height <= platform.position.y && this.position.y + this.height + this.velocity.y >= platform.position.y && this.position.x + this.width > platform.position.x && this.position.x < platform.position.x + platform.width) {
                 this.velocity.y = 0
                 this.floating = false
                 // this.position.y = platform.height + platform.position.y - this.height
             } 
-
-            // console.log(this.position.x + this.width >= platform.position.x && this.position.x <= platform.position.x + platform.width) // works
+            // bottom collision (implemented on jump)
+      
+    
             
-            // console.log(this.position.y, platform.position.y + platform.height, this.velocity.y)
-            // bottom collision
-            // if (this.position.x + this.width >= platform.position.x && this.position.x <= platform.position.x + platform.width && this.position.y <= platform.position.y + platform.height && this.position.y + this.height >= platform.position.y) {
-            //     this.velocity.y = 1
-            // }
-
-            // right collision
-            // right - works (sometimes bugs)
-            if (this.position.y <= platform.position.y && this.position.y  + this.height >= platform.position.y + platform.height && this.position.x + this.width >= platform.position.x && this.position.x <= platform.position.x + platform.width) {
-                this.blocks.right = true
-            } else {
-                this.blocks.right = false
-            }
+        
             
-            // left works, but blocks player perma
-            // if (this.position.y <= platform.position.y && this.position.y  + this.height >= platform.position.y + platform.height && this.position.x <= platform.position.x + platform.width  && this.position.x + this.width >= platform.position.x) {
-            //     this.blocks.left = true
-            // } else {
-            //     this.blocks.left = false
-            // }
            
         }
     }
