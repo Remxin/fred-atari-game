@@ -20,7 +20,6 @@ class Player implements PlayerInterface {
     width: number
     jumpHeight: number
     floating: boolean
-    blocks: { right: boolean, left: boolean}
 
     
     constructor(x: number, y: number) {
@@ -30,7 +29,6 @@ class Player implements PlayerInterface {
         this.height = 30
         this.jumpHeight = jumpHeight
         this.floating = true
-        this.blocks = { right: false, left: false}
     }
 
     draw() {
@@ -62,6 +60,7 @@ class Player implements PlayerInterface {
                 if (this.position.x + this.width + this.velocity.x > platform.position.x && this.position.x < platform.position.x + platform.width && this.position.y <= platform.position.y && this.position.y + this.height >= platform.position.y + platform.height) {
                     isCollision = true
                     this.position.x = platform.position.x - this.width
+                    break
                 }
             }
             // if no collision
@@ -85,6 +84,7 @@ class Player implements PlayerInterface {
                 if (this.position.x - this.velocity.x < platform.position.x + platform.width && this.position.x + this.width > platform.position.x && this.position.y <= platform.position.y && this.position.y + this.height >= platform.position.y + platform.height) {
                     this.position.x = platform.position.x + platform.width
                     isCollision = true
+                    break
                 } 
             }
             
@@ -103,21 +103,9 @@ class Player implements PlayerInterface {
         // jumping
         if (pressedKeys.up && !this.floating) {
             this.floating = true
-           
-            let isCollision = false
-            for (let platform of gameObjects.platforms) {
-                if (this.position.x + this.width >= platform.position.x && this.position.x <= platform.position.x + platform.width && this.position.y - (this.jumpHeight*app.gravity) <= platform.position.y + platform.height && this.position.y + this.height - this.jumpHeight >= platform.position.y) {
-                    this.position.y = platform.position.y + platform.height
-                    // this.velocity.y -= platform.position.y + platform.height
-                    isCollision = true
-                }
-            }
-
-            if (!isCollision) {
-                this.velocity.y -=  this.jumpHeight
-            }
-            
+            this.velocity.y -=  this.jumpHeight       
         }
+        
 
     }
 
@@ -130,9 +118,14 @@ class Player implements PlayerInterface {
                 this.floating = false
                 // this.position.y = platform.height + platform.position.y - this.height
             } 
-            // bottom collision (implemented on jump)
-      
-    
+            // bottom collision 
+            
+            
+            
+            if (this.position.y + this.velocity.y < platform.position.y + platform.height && this.position.y + this.height > platform.position.y && this.position.x + this.width > platform.position.x && this.position.x < platform.position.x + platform.width) {
+                this.position.y = platform.position.y + platform.height
+                this.velocity.y = 1
+            }
             
         
             

@@ -9,6 +9,29 @@
     <script src="./fred.bundle.js" defer></script>
 </head>
 <body>
-    <canvas id="main"></canvas>
+    <div id="container">
+        <canvas id="main"></canvas>
+        <div id="informations">
+            <div id="player-pos-index">
+                <div id="progress-bar">
+                    <div class="checkpoint start"></div>
+                    <div class="checkpoint end"></div>
+                    <div id="player-on-map"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="run-score"></div>
+                <div id="game-over-timer"></div>
+                <div id="total-score"></div>
+            </div>
+            <div class="row">
+                <div id="oxygen"><img src="../img/oxygen-bottle-empty.png" alt="oxygen bottle"><div id="bottle-fill"></div></div>
+                <div id="stones"></div>
+                <div id="lives"></div>
+                <div id="bag"></div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

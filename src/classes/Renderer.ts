@@ -1,4 +1,4 @@
-import { app, gameObjects } from "../main"
+import { app, gameObjects, informationManager } from "../main"
 import Platform from "./Platform"
 
 type breakPointType = {
@@ -33,8 +33,8 @@ class Renderer implements RendererInterface {
             {   
                 abstractionPos: { min: -200, max: 2000},
                 reached: false,
-                platforms: [  new Platform(300, 870), new Platform(250, 950), new Platform(200, 980) ]
-                // platforms: [ new Platform(250, 980) ]
+                // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
+                platforms: [ new Platform(250, 100), new Platform(320, 200) ]
             },
             {
                 abstractionPos: {min: 2000, max: 3000},
@@ -48,10 +48,11 @@ class Renderer implements RendererInterface {
         for (let platform of gameObjects.platforms) {
             platform.draw()
         }
-    }
-    trackRendering() {
-        console.log(this.playerAbstractionPos);
         
+        this.updateInformations()
+    }
+    trackRendering() {        
+
         if (!this.currentBreakPointRendered) {
             // TODO: delte current platforms and enemies
             gameObjects.platforms = []
@@ -70,6 +71,10 @@ class Renderer implements RendererInterface {
             
             this.currentBreakPoint -= 1
         }
+    }
+
+    updateInformations() {
+        informationManager.watchAndUpdatePlayerPos(this.playerAbstractionPos.x)
     }
 }
 

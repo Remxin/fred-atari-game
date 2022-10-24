@@ -2,36 +2,43 @@ import Player from "./classes/Player"
 import Platform from "./classes/Platform"
 import AudioManager from "./classes/AudioManager"
 import Renderer from "./classes/Renderer"
-import { resolveTypeReferenceDirective } from "../node_modules/typescript/lib/typescript"
+import BagItem from "./classes/BagItem"
+import InformationManager from "./classes/InformationManager"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
 const playerStartPos = { x: 100, y: 100 }
-const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
+export const canvasProps = {
+    width: window.innerWidth - 5,
+    height: window.innerHeight - 250,
+    rerenderStep: 20 // higher = better performance
+}
+export const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
+export const informationManager = new InformationManager()
 
 export const app = {
     canvas,
     c: canvas.getContext("2d"),
-    canvasProps: {
-        width: window.innerWidth - 5,
-        height: window.innerHeight,
-        rerenderStep: 20 // higher = better performance
-    },
-    gravity: 3,
+    canvasProps,
+    gravity: 2,
     audioManager,
-    renderer
+    renderer,
+    informationManager
 }
 
 export const pressedKeys = {
     up: false,
     down: false,
     left: false,
-    right: false
+    right: false,
+    f: false
 }
 
 export const gameObjects = {
     platforms: [] as Platform[]
 }
+
+
 
 
 function startGame() {
@@ -45,6 +52,14 @@ function startGame() {
     // create player
     const player = new Player(playerStartPos.x, playerStartPos.y)
     player.draw()
+
+    // show bottom data
+    informationManager.addScorePoints(1)
+    informationManager.updateOxygen(0)
+    informationManager.updateStones(9)
+    informationManager.updateLives(5)
+    informationManager.resetItems()
+    
     
     // animate game
     function startAnim() {
@@ -79,6 +94,10 @@ function recognizePressedKeys(e: KeyboardEvent) {
     if (e.key === "ArrowUp" || e.key === "w") {
         pressedKeys.up = true
     }
+
+    if (e.key === "f") {
+        pressedKeys.f = true
+    }
 }
 
 function unbindPressedKeys(e: KeyboardEvent) {
@@ -93,6 +112,10 @@ function unbindPressedKeys(e: KeyboardEvent) {
     
     if (e.key === "ArrowUp" || e.key === "w") {
         pressedKeys.up = false
+    }
+
+    if (e.key === "f") {
+        pressedKeys.f = false
     }
 }
 

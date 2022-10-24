@@ -1,4 +1,4 @@
-import { app } from "../main"
+import { app, canvasProps } from "../main"
 
 interface PlatformInterface  {
     position: { x: number, y: number}
@@ -14,7 +14,7 @@ class Platform implements PlatformInterface {
     constructor(x: number, y:number) {
         this.position = {
             x,
-            y
+            y: canvasProps.height - y
         }
         this.width = 200
         this.height = 20
