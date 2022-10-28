@@ -1,10 +1,14 @@
 import { app, gameObjects, informationManager } from "../main"
+import Enemy from "./Enemy"
+import Frog from "./Frog"
+import Cactus from "./Cactus"
 import Platform from "./Platform"
 
 type breakPointType = {
     abstractionPos: { min: number, max: number }
     reached: boolean
     platforms: Platform[],
+    enemies: (Frog|Cactus)[]
     // enemies: 
 }
 
@@ -34,20 +38,24 @@ class Renderer implements RendererInterface {
                 abstractionPos: { min: -200, max: 2000},
                 reached: false,
                 // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
-                platforms: [ new Platform(250, 100), new Platform(320, 200) ]
+                platforms: [ new Platform(250, 100), new Platform(320, 200) ],
+                // platforms: [],
+                enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "m")]
             },
             {
                 abstractionPos: {min: 2000, max: 3000},
                 reached: false,
-                platforms: []
+                platforms: [],
+                enemies: []
             }
         ]
     }
 
     updateGameObjects() {
-        for (let platform of gameObjects.platforms) {
+        for (let platform of gameObjects.collidable) {
             platform.draw()
         }
+
         
         this.updateInformations()
     }
@@ -55,10 +63,13 @@ class Renderer implements RendererInterface {
 
         if (!this.currentBreakPointRendered) {
             // TODO: delte current platforms and enemies
-            gameObjects.platforms = []
+            gameObjects.collidable = []
             this.currentBreakPointRendered = true
             this.breakPoints[this.currentBreakPoint].platforms.forEach((platform) => {
-                gameObjects.platforms.push(platform)
+                gameObjects.collidable.push(platform)
+            })
+            this.breakPoints[this.currentBreakPoint].enemies.forEach((enemy) => {
+                gameObjects.collidable.push(enemy)
             })
         }
         // update rerendering phase (add new elements, delete previous)

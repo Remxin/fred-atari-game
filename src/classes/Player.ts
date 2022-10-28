@@ -1,9 +1,11 @@
 import { textChangeRangeIsUnchanged } from "../../node_modules/typescript/lib/typescript"
-import { app, pressedKeys, gameObjects } from "../main"
+import { app, pressedKeys, gameObjects, informationManager } from "../main"
+
 
 // CONSTANTS 
 const jumpHeight = 30
 const velocity = { x: 5, y: 1}
+let startPos = { x: 0, y: 0}
 
 interface PlayerInterface {
     position: { x: number, y: number},
@@ -23,6 +25,7 @@ class Player implements PlayerInterface {
 
     
     constructor(x: number, y: number) {
+        startPos = { x, y}
         this.position = { x, y}
         this.velocity = velocity
         this.width = 30,
@@ -56,12 +59,19 @@ class Player implements PlayerInterface {
         if (pressedKeys.right) {
             
             let isCollision = false
-            for (let platform of gameObjects.platforms) {
-                if (this.position.x + this.width + this.velocity.x > platform.position.x && this.position.x < platform.position.x + platform.width && this.position.y <= platform.position.y && this.position.y + this.height >= platform.position.y + platform.height) {
+            for (let gameObj of gameObjects.collidable) {
+                if (this.position.x < gameObj.position.x + gameObj.width && this.position.x + this.width > gameObj.position.x && this.position.y >= gameObj.position.y && this.position.y + this.height <= gameObj.position.y + gameObj.height) {
                     isCollision = true
-                    this.position.x = platform.position.x - this.width
+                    console.log('jest')
+                    if (gameObj.type === "platform") {
+                        this.position.x = gameObj.position.x - this.width - 1
+                    
+                    } else if (gameObj.type === "enemy") {
+                        this.die()
+                    }
                     break
                 }
+                
             }
             // if no collision
             if (!isCollision) {
@@ -69,23 +79,28 @@ class Player implements PlayerInterface {
                 if (this.position.x < 450) { // move player
                     this.position.x += this.velocity.x
                 } else { // --- scroll view ---
-                    for (let platfrom of gameObjects.platforms) {
+                    for (let platfrom of gameObjects.collidable) {
                         platfrom.position.x -= this.velocity.x
                     }
                 }
             }
         }
-
         // left
         if (pressedKeys.left) {
-            
             let isCollision = false
-            for (let platform of gameObjects.platforms) {
-                if (this.position.x - this.velocity.x < platform.position.x + platform.width && this.position.x + this.width > platform.position.x && this.position.y <= platform.position.y && this.position.y + this.height >= platform.position.y + platform.height) {
-                    this.position.x = platform.position.x + platform.width
+            for (let gameObj of gameObjects.collidable) {
+                if (this.position.x < gameObj.position.x + gameObj.width && this.position.x + this.width > gameObj.position.x && this.position.y >= gameObj.position.y && this.position.y + this.height <= gameObj.position.y + gameObj.height) {
+                    console.log('wchodzi');
+                    
                     isCollision = true
-                    break
+                        if (gameObj.type === "platform") {
+                            this.position.x = gameObj.position.x + gameObj.width + 1
+                        } else if (gameObj.type === "enemy") {
+                            this.die()
+                        }
+                        break
                 } 
+                
             }
             
             if (!isCollision) {
@@ -93,7 +108,7 @@ class Player implements PlayerInterface {
                 if (this.position.x > 100) {
                     this.position.x -= this.velocity.x
                 } else {
-                    for (let platform of gameObjects.platforms) {
+                    for (let platform of gameObjects.collidable) {
                         platform.position.x += this.velocity.x
                     }
                 }
@@ -110,20 +125,23 @@ class Player implements PlayerInterface {
     }
 
     checkCollisions() {
-
-        for (let platform of gameObjects.platforms) {
+        for (let gameObj of gameObjects.collidable) {
             // dropping down collision 
-            if (this.position.y + this.height <= platform.position.y && this.position.y + this.height + this.velocity.y >= platform.position.y && this.position.x + this.width > platform.position.x && this.position.x < platform.position.x + platform.width) {
-                this.velocity.y = 0
-                this.floating = false
+            if (this.position.y + this.height <= gameObj.position.y && this.position.y + this.height + this.velocity.y >= gameObj.position.y && this.position.x + this.width > gameObj.position.x && this.position.x < gameObj.position.x + gameObj.width) {
+                if (gameObj.type === "platform") {
+                    this.velocity.y = 0
+                    this.floating = false
+                } else if (gameObj.type === "enemy") {
+                    this.die()
+                }
                 // this.position.y = platform.height + platform.position.y - this.height
             } 
             // bottom collision 
             
             
             
-            if (this.position.y + this.velocity.y < platform.position.y + platform.height && this.position.y + this.height > platform.position.y && this.position.x + this.width > platform.position.x && this.position.x < platform.position.x + platform.width) {
-                this.position.y = platform.position.y + platform.height
+            if (this.position.y + this.velocity.y < gameObj.position.y + gameObj.height && this.position.y + this.height > gameObj.position.y && this.position.x + this.width > gameObj.position.x && this.position.x < gameObj.position.x + gameObj.width) {
+                this.position.y = gameObj.position.y + gameObj.height
                 this.velocity.y = 1
             }
             
@@ -131,6 +149,13 @@ class Player implements PlayerInterface {
             
            
         }
+    }
+
+    die() {
+        this.position.x = startPos.x
+        this.position.y = startPos.y
+
+        informationManager.updateLives(informationManager.lives.value - 1)
     }
 }
 

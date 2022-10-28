@@ -130,6 +130,7 @@ class InformationManager implements InformationManagerInterface{
 
     updateLives(newLivesValue: number) {
         this.lives.value = newLivesValue
+        this.lives.div.innerHTML = ""
 
         for (let i = 0; i < newLivesValue; i++) {
             const img = document.createElement("img")
