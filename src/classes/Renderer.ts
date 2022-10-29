@@ -1,4 +1,4 @@
-import { app, gameObjects, informationManager } from "../main"
+import { app, gameObjects, informationManager, player } from "../main"
 import Enemy from "./Enemy"
 import Frog from "./Frog"
 import Cactus from "./Cactus"
@@ -40,7 +40,7 @@ class Renderer implements RendererInterface {
                 // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
                 platforms: [ new Platform(250, 100), new Platform(320, 200) ],
                 // platforms: [],
-                enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "m")]
+                enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "l")]
             },
             {
                 abstractionPos: {min: 2000, max: 3000},
@@ -58,6 +58,7 @@ class Renderer implements RendererInterface {
 
         
         this.updateInformations()
+        this.checkEnemyCollisions()
     }
     trackRendering() {        
 
@@ -86,6 +87,16 @@ class Renderer implements RendererInterface {
 
     updateInformations() {
         informationManager.watchAndUpdatePlayerPos(this.playerAbstractionPos.x)
+    }
+
+    checkEnemyCollisions() {
+        for (let gameObj of gameObjects.collidable) {
+            if (gameObj.type === "enemy") {
+                if (player.position.x + player.width >= gameObj.position.x && player.position.x <= gameObj.position.x + gameObj.width &&  ((player.position.y + player.height >= gameObj.position.y && player.position.y >= gameObj.position.y + gameObj.height) || (player.position.y <= gameObj.position.y + gameObj.height && player.position.y + player.height >= gameObj.position.y))) {
+                    player.die()
+                }
+            }
+        }
     }
 }
 

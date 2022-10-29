@@ -6,12 +6,13 @@ import BagItem from "./classes/BagItem"
 import Frog from "./classes/Frog"
 import InformationManager from "./classes/InformationManager"
 import Cactus from "./classes/Cactus"
+import Stone from "./classes/Stone"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
 const playerStartPos = { x: 100, y: 100 }
 
-const player = new Player(playerStartPos.x, playerStartPos.y)
+export const player = new Player(playerStartPos.x, playerStartPos.y)
 export const canvasProps = {
     width: window.innerWidth - 5,
     height: window.innerHeight - 250,
@@ -40,7 +41,9 @@ export const pressedKeys = {
 }
 
 export const gameObjects = {
-    collidable: [] as (Platform|Frog|Cactus)[]
+    collidable: [] as (Platform|Frog|Cactus)[],
+    playerFriendly: [] as Stone[],
+    // nonCollidable: []
 }
 
 
@@ -68,13 +71,17 @@ function startGame() {
     
     // animate game
     function startAnim() {
-        // console.log(gameObjects.collidable);
+        // console.log(renderer.playerAbstractionPos.x, player.position.x) 
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
         player.update()
         for (let gameObj of gameObjects.collidable) {
             if (gameObj.type === "enemy" && gameObj.class !== "cactus") {
                 gameObj.update()
             }
+        }
+
+        for (let playerFriendlyObj of gameObjects.playerFriendly) {
+            playerFriendlyObj.draw()
         }
 
         // initialize renderer (it will automatically render new objects and delte unnecessary ones)

@@ -113,6 +113,7 @@ class InformationManager implements InformationManagerInterface{
     }
 
     updateStones(newStoneValue: number) {
+        this.stones.div.innerHTML = ""
         this.stones.value = newStoneValue
 
         for (let i = 0; i < newStoneValue; i++) {
