@@ -168,6 +168,7 @@ class Player implements PlayerInterface {
             if (this.position.y + this.height <= gameObj.position.y && this.position.y + this.height + this.velocity.y >= gameObj.position.y && this.position.x + this.width > gameObj.position.x && this.position.x < gameObj.position.x + gameObj.width) {
                 if (gameObj.type === "platform") {
                     this.velocity.y = 0
+                    this.position.y = gameObj.position.y - this.height
                     this.floating = false
                 } else if (gameObj.type === "enemy") {
                     this.die()
@@ -200,8 +201,11 @@ class Player implements PlayerInterface {
     manageWeaponUsage() {
         if (pressedKeys.f && !this.stoneThrown) {
             
-            this.stoneThrown = true
+            if (informationManager.stones.value < 1) {
+                return
+            }
 
+            this.stoneThrown = true
             const stone = new Stone()
             // stone.draw()
             gameObjects.playerFriendly.push(stone)

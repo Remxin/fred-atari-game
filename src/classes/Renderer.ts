@@ -1,5 +1,4 @@
-import { app, gameObjects, informationManager, player } from "../main"
-import Enemy from "./Enemy"
+import { gameObjects, informationManager, player } from "../main"
 import Frog from "./Frog"
 import Cactus from "./Cactus"
 import Platform from "./Platform"
