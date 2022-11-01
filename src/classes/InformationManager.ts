@@ -1,6 +1,7 @@
-import BagItem from "./BagItem"
+import BagItem from "./bagItems/BagItem"
 import { app, renderer } from "../main"
 import ImageMapper, { keyType } from "./ImageMapper"
+import BagStoneStack from "./bagItems/BagStoneStack"
 
 const playerContext = {
     mapSize: { min: -300, max: 2000},
@@ -21,7 +22,7 @@ interface InformationManagerInterface {
     stones: { div: HTMLDivElement, value: number, max: number }
     lives: { div: HTMLDivElement, value: number, max: number }
     oxygen: { div: HTMLDivElement, value: number, max: number }
-    bag: { div: HTMLDivElement, items: BagItem[], maxLen: number}
+    bag: { div: HTMLDivElement, items: (BagStoneStack)[], maxLen: number}
 }
 class InformationManager implements InformationManagerInterface{
     playerPosIndex: { div: HTMLDivElement; min: number; max: number }
@@ -30,7 +31,7 @@ class InformationManager implements InformationManagerInterface{
     stones: { div: HTMLDivElement; value: number; max: number }
     lives: { div: HTMLDivElement; value: number, max: number }
     oxygen: { div: HTMLDivElement; value: number; max: number }
-    bag: { div: HTMLDivElement; items: BagItem[], maxLen: number }
+    bag: { div: HTMLDivElement; items: (BagStoneStack)[], maxLen: number }
 
     constructor() {
         this.playerPosIndex = { div: document.getElementById("player-on-map") as HTMLDivElement, min: playerContext.mapSize.min, max: playerContext.mapSize.max}
@@ -58,7 +59,6 @@ class InformationManager implements InformationManagerInterface{
 
         const scoreStr = { run: this.runScore.value + "", total: this.totalScore.value + "" }
         const blankZeros = {run: playerContext.scoreLen - scoreStr.run.length, total: playerContext.scoreLen -  scoreStr.total.length }
-        console.log(blankZeros);
         
 
         Object.values(blankZeros).forEach((blankZero, index) => {
@@ -114,6 +114,13 @@ class InformationManager implements InformationManagerInterface{
 
     updateStones(newStoneValue: number) {
         this.stones.div.innerHTML = ""
+        // if greater than 10 add stone stack item to player
+        if (newStoneValue > 10) {
+            const stoneStack = new BagStoneStack()
+            this.addItem(stoneStack)
+            newStoneValue -= 10
+        }
+
         this.stones.value = newStoneValue
 
         for (let i = 0; i < newStoneValue; i++) {
@@ -143,12 +150,16 @@ class InformationManager implements InformationManagerInterface{
     }
 
     private showItems() {
+        this.bag.div.innerHTML = ""
         const blankItems = this.bag.maxLen - this.bag.items.length
 
+        console.log(blankItems)
+
         for (let item of this.bag.items) {
+            console.log(item)
             const img = document.createElement("img")
             img.alt = "item image"
-            img.src = ImageMapper.getImage(item.name)
+            img.src = ImageMapper.getImage(item.class)
 
             this.bag.div.appendChild(img)
         }
@@ -166,13 +177,13 @@ class InformationManager implements InformationManagerInterface{
         this.showItems()
     }
 
-    addItem(item: BagItem) {
+    addItem(item: BagStoneStack) {
         this.bag.items.push(item)
         this.showItems()
     }
 
     deleteItem (deletedItem: BagItem) {
-        const itemIndex = this.bag.items.findIndex((item) => item.name === deletedItem.name)
+        const itemIndex = this.bag.items.findIndex((item) => item.class === deletedItem.class)
         if (itemIndex === -1) throw new Error("Item index out of range (please check deleteItem function at renderer)")
 
         this.bag.items.splice(itemIndex, 1) // deleting item from bag

@@ -1,4 +1,11 @@
-import { app, canvasProps } from "../main"
+import { app, canvasProps, spriteSheet } from "../main"
+import UUID from "../helpers/uuid"
+import ImageMapper from "./ImageMapper"
+import SizeMapper from "./SizeMapper"
+
+export type platformType = "a" | "b"
+export type platformLenght = "s" | "m" | "l" | "lg"
+export type plarformTurnDirection = "left" | "right"
 
 interface PlatformInterface  {
     position: { x: number, y: number}
@@ -6,6 +13,8 @@ interface PlatformInterface  {
     width: number
     type: "platform"
     class: "platform"
+    id: string
+    graphics: { type: platformType, length: platformLenght, turnDirection: plarformTurnDirection, cords: { x: number, y: number, height: number, width: number }}
 }
 
 class Platform implements PlatformInterface {
@@ -14,21 +23,38 @@ class Platform implements PlatformInterface {
     height: number
     type: "platform"
     class: "platform"
+    id: string
+    graphics: { type: platformType, length: platformLenght, turnDirection: plarformTurnDirection, cords: { x: number, y: number, height: number, width: number }}
 
-    constructor(x: number, y:number) {
+    constructor(x: number, y:number, type: platformType, length: platformLenght, turnDirection: plarformTurnDirection) {
+        this.id = UUID.genId()
         this.position = {
             x,
             y: canvasProps.height - y
         }
-        this.width = 200
-        this.height = 20
+
+        const size = SizeMapper.getPlatformSize(type, length)
+        this.width = size.width
+        this.height = size.height
+
         this.type = "platform"
         this.class = "platform"
+        this.graphics = { cords: ImageMapper.getPlatformImageCords(type, length, turnDirection), type, length, turnDirection}
+
     }
 
     draw() {
-        app.c.fillStyle = "blue"
-        app.c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        // working on tests
+        // app.c.fillStyle = "blue"
+        // app.c.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+        // actual image draw
+        app.c.drawImage(spriteSheet, this.position.x, this.position.y, this.width, this.height,
+            this.graphics.cords.x, this.graphics.cords.y, 200, 200)
+
+            app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
+        // app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height)
+
     }
 }
 

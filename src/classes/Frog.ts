@@ -7,6 +7,7 @@ const CONSTANTS = {
 }
 
 interface FrogInterface {
+    id: string
     width: number
     stayTimeout: number
     position: { x: number, y: number}
@@ -19,6 +20,7 @@ interface FrogInterface {
     movingRight: boolean
 }
 class Frog extends Enemy implements FrogInterface{
+    id: string
     movementRange: { min: number; max: number; };
     stayTimeout: number
     velocity: { x: number, y: number }

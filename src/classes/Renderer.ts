@@ -1,4 +1,4 @@
-import { gameObjects, informationManager, player } from "../main"
+import { gameObjects, informationManager, player, renderer } from "../main"
 import Frog from "./Frog"
 import Cactus from "./Cactus"
 import Platform from "./Platform"
@@ -37,7 +37,7 @@ class Renderer implements RendererInterface {
                 abstractionPos: { min: -200, max: 2000},
                 reached: false,
                 // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
-                platforms: [ new Platform(250, 100), new Platform(320, 200) ],
+                platforms: [ new Platform(250, 100, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left") ],
                 // platforms: [],
                 enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "l")]
             },
@@ -51,8 +51,8 @@ class Renderer implements RendererInterface {
     }
 
     updateGameObjects() {
-        for (let platform of gameObjects.collidable) {
-            platform.draw()
+        for (let gameObj of gameObjects.collidable) {
+            gameObj.draw()
         }
 
         
@@ -78,8 +78,6 @@ class Renderer implements RendererInterface {
         }
 
         if (this.playerAbstractionPos.x < this.breakPoints[this.currentBreakPoint].abstractionPos.min) {
-            console.log(this.currentBreakPoint);
-            
             this.currentBreakPoint -= 1
         }
     }

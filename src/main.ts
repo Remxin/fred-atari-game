@@ -2,11 +2,11 @@ import Player from "./classes/Player"
 import Platform from "./classes/Platform"
 import AudioManager from "./classes/AudioManager"
 import Renderer from "./classes/Renderer"
-import BagItem from "./classes/BagItem"
 import Frog from "./classes/Frog"
 import InformationManager from "./classes/InformationManager"
 import Cactus from "./classes/Cactus"
 import Stone from "./classes/Stone"
+import BagStoneStack from "./classes/bagItems/BagStoneStack"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
@@ -37,7 +37,8 @@ export const pressedKeys = {
     down: false,
     left: false,
     right: false,
-    f: false
+    f: false,
+    e: false
 }
 
 export const gameObjects = {
@@ -46,10 +47,20 @@ export const gameObjects = {
     // nonCollidable: []
 }
 
+export const spriteSheet = new Image()
+spriteSheet.src = "../img/spritesheet.png"
+
+function loadSprite() {
+    return new Promise((resolve, reject) => {
+        spriteSheet.onload = () => {
+            resolve(true)
+        }
+    })
+}
 
 
-
-function startGame() {
+async function startGame() {
+    await loadSprite()
     // resize canvas
     app.canvas.width = app.canvasProps.width
     app.canvas.height = app.canvasProps.height - 6
@@ -58,20 +69,19 @@ function startGame() {
     // app.audioManager.play()
 
     // create player
-
     player.draw()
 
     // show bottom data
     informationManager.addScorePoints(1)
     informationManager.updateOxygen(0)
-    informationManager.updateStones(9)
+    informationManager.updateStones(19)
     informationManager.updateLives(5)
-    informationManager.resetItems()
+    // informationManager.resetItems()
+
     
     
     // animate game
     function startAnim() {
-        // console.log(renderer.playerAbstractionPos.x, player.position.x) 
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
         player.update()
         for (let gameObj of gameObjects.collidable) {
@@ -116,6 +126,10 @@ function recognizePressedKeys(e: KeyboardEvent) {
     if (e.key === "f") {
         pressedKeys.f = true
     }
+
+    if (e.key === "e") {
+        pressedKeys.e = true
+    }   
 }
 
 function unbindPressedKeys(e: KeyboardEvent) {
@@ -135,6 +149,10 @@ function unbindPressedKeys(e: KeyboardEvent) {
     if (e.key === "f") {
         pressedKeys.f = false
     }
+
+    if (e.key === "e") {
+        pressedKeys.e = false
+    }   
 }
 
 

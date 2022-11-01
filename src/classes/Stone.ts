@@ -1,8 +1,8 @@
-import { player, app, gameObjects } from "../main"
+import { player, app, gameObjects, informationManager } from "../main"
 
 const CONSTS = {
-    stoneW: 10,
-    stoneH: 10,
+    stoneW: 15,
+    stoneH: 15,
     stoneVelocity: { x: 32, y: -6},
     minStoneVelocity: { x: 10, y: 18},
     airResistance: { x: 2, y: 2}
@@ -55,20 +55,23 @@ class Stone {
     }
 
     checkCollision() {
-        console.log(app.canvasProps.height)
         if (this.height + this.position.y >= app.canvasProps.height) {
             this.remove()
             player.stoneThrown = false
         }
 
         for (let gameObj of gameObjects.collidable) {
-            if (this.position.x + this.width >= gameObj.position.x && this.position.x <= gameObj.position.x + gameObj.width && this.position.y >= gameObj.position.y && this.position.y + this.width <= gameObj.position.y + gameObj.height) {
+            if (this.position.x + this.width + Math.round(this.velocity.x/2)>= gameObj.position.x && this.position.x <= gameObj.position.x + gameObj.width && this.position.y >= gameObj.position.y && this.position.y + this.width <= gameObj.position.y + gameObj.height) {
                 this.remove()
                 player.stoneThrown = false
+
+                if (gameObj.type === "enemy" && gameObj.class !== "cactus") { // TODO: kill enemy if it is not a cactus
+                    gameObj.remove()
+                    informationManager.addScorePoints(50)
+                }
             }
         }
 
-        // console.log(gameObjects.playerFriendly);
         
     }
 
