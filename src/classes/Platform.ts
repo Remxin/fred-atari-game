@@ -44,17 +44,7 @@ class Platform implements PlatformInterface {
     }
 
     draw() {
-        // working on tests
-        // app.c.fillStyle = "blue"
-        // app.c.fillRect(this.position.x, this.position.y, this.width, this.height)
-
-        // actual image draw
-        app.c.drawImage(spriteSheet, this.position.x, this.position.y, this.width, this.height,
-            this.graphics.cords.x, this.graphics.cords.y, 200, 200)
-
-            app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
-        // app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height)
-
+        app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 }
 

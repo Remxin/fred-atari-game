@@ -1,4 +1,5 @@
-import { player, app, gameObjects, informationManager } from "../main"
+import { player, app, gameObjects, informationManager, spriteSheet } from "../main"
+import ImageMapper from "./ImageMapper"
 
 const CONSTS = {
     stoneW: 15,
@@ -16,6 +17,7 @@ class Stone {
     velocity: { x: number, y: number }
     turnDirection: "left" | "right"
     class: "stone"
+    graphics: { cords: { x: number, y: number, height: number, width: number}}
 
     constructor() {
         this.width = CONSTS.stoneW
@@ -25,33 +27,35 @@ class Stone {
         this.position = { x: startX, y: player.position.y + Math.round(player.height/4) }
         this.velocity = { x: CONSTS.stoneVelocity.x, y: CONSTS.stoneVelocity.y }
         this.class = "stone"
-        // this.draw()
+        this.graphics = { cords: ImageMapper.getStoneImageCords() }
     }
 
     draw() {
         this.checkCollision()
-        app.c.fillStyle = "green"
-        app.c.fillRect(this.position.x, this.position.y, this.width, this.height)
-
-
-
+        
+        
+        
         if (this.velocity.x > CONSTS.minStoneVelocity.x * 2) {
             this.velocity.x -= CONSTS.airResistance.x
         }
-
+        
         if (this.velocity.y < CONSTS.minStoneVelocity.y) {
             this.velocity.y += CONSTS.airResistance.y
         }
-
+        
         if (this.turnDirection === "right") {
             this.position.x += this.velocity.x
         } else {
             this.position.x -= this.velocity.x 
         }
-
+        
         if (this.velocity.y > -4) {
             this.position.y += this.velocity.y
         }
+
+        // app.c.fillStyle = "green"
+        // app.c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
     checkCollision() {

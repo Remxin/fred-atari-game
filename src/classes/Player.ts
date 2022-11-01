@@ -1,5 +1,6 @@
 import { isThisTypeNode, textChangeRangeIsUnchanged } from "../../node_modules/typescript/lib/typescript"
-import { app, pressedKeys, gameObjects, informationManager, renderer, player } from "../main"
+import { app, pressedKeys, gameObjects, informationManager, renderer, spriteSheet, player } from "../main"
+import ImageMapper from "./ImageMapper"
 import Stone from "./Stone"
 
 
@@ -7,10 +8,13 @@ import Stone from "./Stone"
 const jumpHeight = 30
 const velocity = { x: 5, y: 1}
 let startPos = { x: 0, y: 0}
-const size = { w: 30, h: 50}
+const size = { w: 50, h: 90}
 const weaponChangeTimeout = 500
 const stoneDelayValue = 1000
 const viewBreakPoints = { min: 400, max: 800}
+const maxAnimValue = {
+    move: 24, jump: 10000
+}
 
 interface PlayerInterface {
     position: { x: number, y: number},
@@ -24,6 +28,9 @@ interface PlayerInterface {
     lastPos: { x: number, y: number }
     // floatingDirection: "" | "left" | "right"
     weaponChosen: { timeout: number, type: "stones" | "fire", stoneDelay: number}
+    animProps: { moving: boolean, animJumpPhase: number, animMovePhase: number}
+    graphics: { cords: {x: number, y: number, height: number, width: number }}
+
 }
 class Player implements PlayerInterface {
     position: { x: number, y: number }
@@ -36,6 +43,9 @@ class Player implements PlayerInterface {
     stoneThrown: boolean
     lastPos: { x: number, y: number }
     weaponChosen: { timeout: number, type: "stones" | "fire", stoneDelay: number}
+    animProps: { moving: boolean; animJumpPhase: number, animMovePhase: number, previousDirection: "left" | "right"}
+    graphics: { cords: {x: number, y: number, height: number, width: number }}
+
 
     
     constructor(x: number, y: number) {
@@ -50,11 +60,13 @@ class Player implements PlayerInterface {
         this.stoneThrown = false
         this.lastPos = { x: 0, y: 0}
         this.weaponChosen = { timeout: 0, type: "stones", stoneDelay: 0}
+        this.animProps = { moving: false, animJumpPhase: 0, animMovePhase: 0, previousDirection: "right"}
+      
     }
 
     draw() {
-        app.c.fillStyle = "red"
-        app.c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        this.graphics = { cords: ImageMapper.getPlayerImageCords(this.animProps.moving, this.animProps.animJumpPhase, this.animProps.animMovePhase, this.floating.isfloating, this.turnDirection)}
+        app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
     update() {
@@ -77,7 +89,18 @@ class Player implements PlayerInterface {
         this.blockOptions()
         // right
         if (pressedKeys.right && !this.floating.isfloating) {
+            
             this.turnDirection = "right"
+            if (!pressedKeys.left) this.animProps.moving = true // signalise that player is moving
+            if (this.turnDirection !== this.animProps.previousDirection) this.animProps.animMovePhase = 0 // if changed direction start animation again
+            else {
+                if (this.animProps.animMovePhase >= maxAnimValue.move) this.animProps.animMovePhase = 0
+                else this.animProps.animMovePhase += 1
+
+            }
+
+
+            this.animProps.previousDirection = "right"
             let isCollision = false
             for (let gameObj of gameObjects.collidable) {
                 if (gameObj.type === "platform") {
@@ -106,6 +129,18 @@ class Player implements PlayerInterface {
         // left
         if (pressedKeys.left && !this.floating.isfloating) {
             this.turnDirection = "left"
+            
+
+            if (!pressedKeys.right) this.animProps.moving = true // signalise that player is moving
+            if (this.turnDirection !== this.animProps.previousDirection) this.animProps.animMovePhase = 0 // if changed direction start animation again
+            else {
+                if (this.animProps.animMovePhase >= maxAnimValue.move) this.animProps.animMovePhase = 0
+                else this.animProps.animMovePhase += 1
+
+            }
+
+            
+            this.animProps.previousDirection = "left"
             let isCollision = false
             for (let gameObj of gameObjects.collidable) {
                 if (gameObj.type === 'platform') {
@@ -136,7 +171,7 @@ class Player implements PlayerInterface {
             else this.floating.direction = ""
 
 
-            this.velocity.y -=  this.jumpHeight       
+            this.velocity.y -=  this.jumpHeight   
         }
 
         if (this.floating.isfloating && this.floating.direction === "left") {
@@ -147,6 +182,8 @@ class Player implements PlayerInterface {
             } else { 
                 this.position.x -= this.velocity.x
             }
+            this.animProps.animJumpPhase += 1
+
         } else if (this.floating.isfloating && this.floating.direction === "right") {
             renderer.playerAbstractionPos.x += this.velocity.x
 
@@ -155,12 +192,19 @@ class Player implements PlayerInterface {
             } else { 
                 this.position.x += this.velocity.x
             }
+
+            this.animProps.animJumpPhase += 1
+        } else {
+            this.animProps.animJumpPhase += 1
         }
 
         if (!this.floating.isfloating) {
             this.floating.direction = ""
+            this.animProps.animJumpPhase = 0
         }
         // -----------------
+
+        if ((pressedKeys.left && pressedKeys.right) || (!pressedKeys.left && !pressedKeys.right)) this.animProps.moving = false
         
 
     }

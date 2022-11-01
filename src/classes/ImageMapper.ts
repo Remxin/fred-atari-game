@@ -3,6 +3,14 @@ import { platformType, platformLenght, plarformTurnDirection } from "./Platform"
 
 export type keyType = "0" | '1' | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "stone" | "life" | "item placeholder" | "bag stone stack" | "bag hat" | "bag shield" | "bag oxygen"
 
+
+const CONSTANTS = {
+  player: {
+    jumpingAnimHop: 10,
+    movementAnimHop: 8
+  }
+}
+
 class ImageMapper {
     // static spriteSheet = spriteSheet
     static imageMap = {
@@ -72,8 +80,53 @@ class ImageMapper {
 
     }
 
-    static getPlayerImageCords = () => {
+    static getPlayerImageCords = (moving: boolean, animJumpPhase: number, animMovePhase: number,  floating: boolean, turnDirection: "left" | "right" ) => {
+      let returnCords = { x: 2, y: 0, height: 129, width: 70}
+      if (floating) { // jumped
+        if (turnDirection === "right") {
+          if (animJumpPhase < CONSTANTS.player.jumpingAnimHop)returnCords.x = 802
+          else returnCords.x = 713
 
+        } else {
+
+          if (animJumpPhase < CONSTANTS.player.jumpingAnimHop) returnCords.x = 976
+          else returnCords.x = 889
+        }
+
+      } else { // not jumped
+        if (!moving) { // not moving
+          if (turnDirection === "right") {
+            returnCords.x = 2
+          } else {
+            returnCords.x = 357
+          }
+        } else {
+          console.log(animMovePhase)
+          if (turnDirection === "right") {
+            if (animMovePhase <= CONSTANTS.player.movementAnimHop) {
+              returnCords.x = 91
+            } else if (animMovePhase <= CONSTANTS.player.movementAnimHop * 2) {
+              returnCords.x = 268
+            } else if (animMovePhase <= CONSTANTS.player.movementAnimHop * 3) {
+              returnCords.x = 180
+            }
+          } else { // left and moving - not jumping
+            if (animMovePhase <= CONSTANTS.player.movementAnimHop) {
+              returnCords.x = 446
+            } else if (animMovePhase <= CONSTANTS.player.movementAnimHop * 2) {
+              returnCords.x = 624
+            } else if (animMovePhase <= CONSTANTS.player.movementAnimHop * 3) {
+              returnCords.x = 535
+            }
+          }
+        }
+      }
+
+      return returnCords
+    }
+
+    static getStoneImageCords = () => {
+      return { x: 1065, y: 0, width: 27, height: 26} // 1092
     }
 }
 
