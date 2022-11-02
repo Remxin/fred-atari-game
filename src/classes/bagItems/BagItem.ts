@@ -8,10 +8,12 @@ interface BagItemInterface {
 abstract class BagItem implements BagItemInterface {
     class: itemNameType
     expiresIn: number
+    type = "bag item"
 
     constructor() {
         // this.name = name
         this.expiresIn = 0
+        this.type = "bag item"
     }
 
     startExpiring(callback: Function) {

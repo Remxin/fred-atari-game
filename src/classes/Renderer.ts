@@ -2,12 +2,15 @@ import { gameObjects, informationManager, player, renderer } from "../main"
 import Frog from "./Frog"
 import Cactus from "./Cactus"
 import Platform from "./Platform"
+import Vase from "./Vase"
 
 type breakPointType = {
     abstractionPos: { min: number, max: number }
     reached: boolean
     platforms: Platform[],
-    enemies: (Frog|Cactus)[]
+    enemies: (Frog|Cactus)[],
+    neutral: (Vase)[],
+    decorations: []
     // enemies: 
 }
 
@@ -39,19 +42,29 @@ class Renderer implements RendererInterface {
                 // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
                 platforms: [ new Platform(250, 100, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left") ],
                 // platforms: [],
-                enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "l")]
+                // enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "l")],
+                enemies: [],
+                neutral: [ new Vase(400, 56)],
+                decorations: []
             },
             {
                 abstractionPos: {min: 2000, max: 3000},
                 reached: false,
                 platforms: [],
-                enemies: []
+                enemies: [],
+                neutral: [],
+                decorations: []
+                
             }
         ]
     }
 
     updateGameObjects() {
         for (let gameObj of gameObjects.collidable) {
+            gameObj.draw()
+        }
+
+        for (let gameObj of gameObjects.nonCollidable) {
             gameObj.draw()
         }
 
@@ -62,14 +75,20 @@ class Renderer implements RendererInterface {
     trackRendering() {        
 
         if (!this.currentBreakPointRendered) {
-            // TODO: delte current platforms and enemies
             gameObjects.collidable = []
+            gameObjects.nonCollidable = []
+
+
             this.currentBreakPointRendered = true
             this.breakPoints[this.currentBreakPoint].platforms.forEach((platform) => {
                 gameObjects.collidable.push(platform)
             })
             this.breakPoints[this.currentBreakPoint].enemies.forEach((enemy) => {
                 gameObjects.collidable.push(enemy)
+            })
+
+            this.breakPoints[this.currentBreakPoint].neutral.forEach((neutral) => {
+                gameObjects.nonCollidable.push(neutral)
             })
         }
         // update rerendering phase (add new elements, delete previous)

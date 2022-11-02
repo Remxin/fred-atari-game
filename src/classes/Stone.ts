@@ -76,6 +76,16 @@ class Stone {
             }
         }
 
+        for (let nonCollidable of gameObjects.nonCollidable) {
+            if (nonCollidable.type !== "vase") return
+
+            if (this.position.x + this.width + Math.round(this.velocity.x/2)>= nonCollidable.position.x && this.position.x <= nonCollidable.position.x + nonCollidable.width && this.position.y >= nonCollidable.position.y && this.position.y + this.width <= nonCollidable.position.y + nonCollidable.height) {
+                this.remove()
+                player.stoneThrown = false
+                nonCollidable.remove()
+            }
+        }   
+
         
     }
 
@@ -83,6 +93,7 @@ class Stone {
         const stoneIndex = gameObjects.playerFriendly.findIndex(f => f.class === this.class)
         gameObjects.playerFriendly.splice(stoneIndex, 1)
     }
+
 
 }
 

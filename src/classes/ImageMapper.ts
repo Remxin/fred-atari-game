@@ -101,7 +101,6 @@ class ImageMapper {
             returnCords.x = 357
           }
         } else {
-          console.log(animMovePhase)
           if (turnDirection === "right") {
             if (animMovePhase <= CONSTANTS.player.movementAnimHop) {
               returnCords.x = 91
@@ -127,6 +126,10 @@ class ImageMapper {
 
     static getStoneImageCords = () => {
       return { x: 1065, y: 0, width: 27, height: 26} // 1092
+    }
+
+    static getVaseCords = () => {
+      return { x: 2, y: 1103, width: 61, height: 58}
     }
 }
 

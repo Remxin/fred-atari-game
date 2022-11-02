@@ -32,8 +32,8 @@ class Frog extends Enemy implements FrogInterface{
 
     constructor(x: number, y: number, movementMin: number, movementMax: number) {
         super(x, y)
-        this.width = 20
-        this.height = 20
+        this.width = 30
+        this.height = 30
         this.type = "enemy"
         this.class = "frog"
         this.velocity = CONSTANTS.velocity

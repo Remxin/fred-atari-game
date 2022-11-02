@@ -101,21 +101,10 @@ class Player implements PlayerInterface {
 
 
             this.animProps.previousDirection = "right"
-            let isCollision = false
-            for (let gameObj of gameObjects.collidable) {
-                if (gameObj.type === "platform") {
+            let isCollision = this.collisionChk("right")
 
-                    if (this.position.x < gameObj.position.x + gameObj.width && this.position.x + this.width > gameObj.position.x && this.position.y >= gameObj.position.y && this.position.y + this.height <= gameObj.position.y + gameObj.height) {
-                        isCollision = true
-                       
-                
-                        this.position.x = gameObj.position.x - this.width - 1
-                        break
-                    }
-                }
-
-                
-            }
+            
+         
             // if no collision
             if (!isCollision) {
                 app.renderer.playerAbstractionPos.x += this.velocity.x
@@ -130,7 +119,6 @@ class Player implements PlayerInterface {
         if (pressedKeys.left && !this.floating.isfloating) {
             this.turnDirection = "left"
             
-
             if (!pressedKeys.right) this.animProps.moving = true // signalise that player is moving
             if (this.turnDirection !== this.animProps.previousDirection) this.animProps.animMovePhase = 0 // if changed direction start animation again
             else {
@@ -139,20 +127,9 @@ class Player implements PlayerInterface {
 
             }
 
-            
             this.animProps.previousDirection = "left"
-            let isCollision = false
-            for (let gameObj of gameObjects.collidable) {
-                if (gameObj.type === 'platform') {
-                    if (this.position.x < gameObj.position.x + gameObj.width && this.position.x + this.width > gameObj.position.x && this.position.y >= gameObj.position.y && this.position.y + this.height <= gameObj.position.y + gameObj.height) {
-                        isCollision = true
-                        this.position.x = gameObj.position.x + gameObj.width + 1
-                        break
-                    } 
-                }
-                
-            }
-            
+            let isCollision = this.collisionChk("left")
+          
             if (!isCollision) {
                 app.renderer.playerAbstractionPos.x -= this.velocity.x
                 if (this.position.x > viewBreakPoints.min) {
@@ -176,21 +153,26 @@ class Player implements PlayerInterface {
 
         if (this.floating.isfloating && this.floating.direction === "left") {
             renderer.playerAbstractionPos.x -= this.velocity.x
+            const isCollision = this.collisionChk("left")
 
-            if (this.position.x < viewBreakPoints.min) {
-                this.paralaxMoveAll('left')
-            } else { 
-                this.position.x -= this.velocity.x
+            if (!isCollision) {
+                if (this.position.x < viewBreakPoints.min) {
+                    this.paralaxMoveAll('left')
+                } else { 
+                    this.position.x -= this.velocity.x
+                }
             }
             this.animProps.animJumpPhase += 1
 
         } else if (this.floating.isfloating && this.floating.direction === "right") {
             renderer.playerAbstractionPos.x += this.velocity.x
-
-            if (this.position.x > viewBreakPoints.max) {
-                this.paralaxMoveAll('right')
-            } else { 
-                this.position.x += this.velocity.x
+            const isCollision = this.collisionChk('right')
+            if (!isCollision) {
+                if (this.position.x > viewBreakPoints.max) {
+                    this.paralaxMoveAll('right')
+                } else { 
+                    this.position.x += this.velocity.x
+                }
             }
 
             this.animProps.animJumpPhase += 1
@@ -203,7 +185,7 @@ class Player implements PlayerInterface {
             this.animProps.animJumpPhase = 0
         }
         // -----------------
-
+        
         if ((pressedKeys.left && pressedKeys.right) || (!pressedKeys.left && !pressedKeys.right)) this.animProps.moving = false
         
 
@@ -237,12 +219,12 @@ class Player implements PlayerInterface {
 
     die() {
 
-        console.log(renderer.playerAbstractionPos.x, this.position.x)
+        // console.log(renderer.playerAbstractionPos.x, this.position.x)
         // descrolling view
         const descrollValue = renderer.playerAbstractionPos.x - this.position.x
-        console.log(descrollValue)
+        // console.log(descrollValue)
         for (let collidableObj of gameObjects.collidable) {
-            collidableObj.position.x -= descrollValue
+            collidableObj.position.x += descrollValue
         }
         renderer.playerAbstractionPos.x = startPos.x
         
@@ -315,12 +297,47 @@ class Player implements PlayerInterface {
             for (let playerFriendlyObj of gameObjects.playerFriendly) {
                 playerFriendlyObj.position.x -= this.velocity.x
             }
+
+            for (let nonCollidable of gameObjects.nonCollidable) {
+                nonCollidable.position.x -= this.velocity.x
+            }
         } else {
             for (let collidable of gameObjects.collidable) {
                 collidable.position.x += this.velocity.x
             }
             for (let playerFriendlyObj of gameObjects.playerFriendly) {
                 playerFriendlyObj.position.x += this.velocity.x
+            }
+
+            for (let nonCollidable of gameObjects.nonCollidable) {
+                nonCollidable.position.x += this.velocity.x
+            }
+        }
+    }
+
+    collisionChk(direction: "left" | "right") {
+        if (direction === "right") {
+            for (let gameObj of gameObjects.collidable) {
+                if (gameObj.type === "platform") { // ! BUG
+                    if (this.position.x < gameObj.position.x + gameObj.width && this.position.x + this.width >= gameObj.position.x && this.position.y < gameObj.position.y + gameObj.height  && this.position.y + this.height > gameObj.position.y) {
+                        return true
+                        // this.position.x = gameObj.position.x - this.width               
+                
+                        // break
+                    }
+                }
+    
+                
+            }
+        } else {
+            for (let gameObj of gameObjects.collidable) {
+                if (gameObj.type === 'platform') { // ! BUG 
+                    if (this.position.x <= gameObj.position.x + gameObj.width && this.position.x + this.width > gameObj.position.x && this.position.y < gameObj.position.y + gameObj.height  && this.position.y + this.height > gameObj.position.y) {
+                        return true
+                        
+                    } 
+                }
+                
             }
         }
     }

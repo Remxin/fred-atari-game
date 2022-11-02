@@ -7,6 +7,9 @@ import InformationManager from "./classes/InformationManager"
 import Cactus from "./classes/Cactus"
 import Stone from "./classes/Stone"
 import BagStoneStack from "./classes/bagItems/BagStoneStack"
+import Vase from "./classes/Vase"
+// import StoneStack from "./classes/items/StoneStack"
+import Item from "./classes/items/Item"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
@@ -44,7 +47,7 @@ export const pressedKeys = {
 export const gameObjects = {
     collidable: [] as (Platform|Frog|Cactus)[],
     playerFriendly: [] as Stone[],
-    // nonCollidable: []
+    nonCollidable: [] as (Vase | Item)[]
 }
 
 export const spriteSheet = new Image()
@@ -83,20 +86,27 @@ async function startGame() {
     // animate game
     function startAnim() {
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
-        player.update()
         for (let gameObj of gameObjects.collidable) {
             if (gameObj.type === "enemy" && gameObj.class !== "cactus") {
                 gameObj.update()
             }
         }
-
+        
         for (let playerFriendlyObj of gameObjects.playerFriendly) {
             playerFriendlyObj.draw()
         }
 
+        for (let nonCollidable of gameObjects.nonCollidable) {
+            nonCollidable.draw()
+            
+            if (nonCollidable.type !== "item") break
+            nonCollidable.checkIfPlayerPicked()
+        }
+        
         // initialize renderer (it will automatically render new objects and delte unnecessary ones)
         renderer.trackRendering()
         renderer.updateGameObjects()
+        player.update()
         
         
         setTimeout(() => {
