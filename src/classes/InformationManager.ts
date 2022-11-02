@@ -2,6 +2,9 @@ import BagItem from "./bagItems/BagItem"
 import { app, renderer } from "../main"
 import ImageMapper, { keyType } from "./ImageMapper"
 import BagStoneStack from "./bagItems/BagStoneStack"
+import BagOxygen from "./bagItems/BagOxygen"
+import BagHat from "./bagItems/BagHat"
+import BagShield from "./bagItems/BagShield"
 
 const playerContext = {
     mapSize: { min: -300, max: 2000},
@@ -22,7 +25,7 @@ interface InformationManagerInterface {
     stones: { div: HTMLDivElement, value: number, max: number }
     lives: { div: HTMLDivElement, value: number, max: number }
     oxygen: { div: HTMLDivElement, value: number, max: number }
-    bag: { div: HTMLDivElement, items: (BagStoneStack)[], maxLen: number}
+    bag: { div: HTMLDivElement, items: (BagStoneStack|BagOxygen|BagHat|BagShield)[], maxLen: number}
 }
 class InformationManager implements InformationManagerInterface{
     playerPosIndex: { div: HTMLDivElement; min: number; max: number }
@@ -31,7 +34,7 @@ class InformationManager implements InformationManagerInterface{
     stones: { div: HTMLDivElement; value: number; max: number }
     lives: { div: HTMLDivElement; value: number, max: number }
     oxygen: { div: HTMLDivElement; value: number; max: number }
-    bag: { div: HTMLDivElement; items: (BagStoneStack)[], maxLen: number }
+    bag: { div: HTMLDivElement; items: (BagStoneStack|BagOxygen|BagHat|BagShield)[], maxLen: number }
 
     constructor() {
         this.playerPosIndex = { div: document.getElementById("player-on-map") as HTMLDivElement, min: playerContext.mapSize.min, max: playerContext.mapSize.max}
@@ -117,7 +120,6 @@ class InformationManager implements InformationManagerInterface{
         // if greater than 10 add stone stack item to player
         if (newStoneValue > 10) {
             const stoneStack = new BagStoneStack()
-            this.addItem(stoneStack)
             newStoneValue -= 10
         }
 
@@ -153,10 +155,8 @@ class InformationManager implements InformationManagerInterface{
         this.bag.div.innerHTML = ""
         const blankItems = this.bag.maxLen - this.bag.items.length
 
-        console.log(blankItems)
 
         for (let item of this.bag.items) {
-            console.log(item)
             const img = document.createElement("img")
             img.alt = "item image"
             img.src = ImageMapper.getImage(item.class)
@@ -177,13 +177,17 @@ class InformationManager implements InformationManagerInterface{
         this.showItems()
     }
 
-    addItem(item: BagStoneStack) {
+    addItem(item: BagStoneStack | BagOxygen | BagHat | BagShield) {
         this.bag.items.push(item)
         this.showItems()
+        // console.log(this.bag.items)
     }
 
     deleteItem (deletedItem: BagItem) {
+        console.log(deletedItem)
         const itemIndex = this.bag.items.findIndex((item) => item.class === deletedItem.class)
+        console.log(itemIndex)
+        console.log(this.bag.items)
         if (itemIndex === -1) throw new Error("Item index out of range (please check deleteItem function at renderer)")
 
         this.bag.items.splice(itemIndex, 1) // deleting item from bag

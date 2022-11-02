@@ -11,6 +11,8 @@ class BagStoneStack extends BagItem implements BagStoneStackInterface {
     constructor() {
         super()
         this.class = "bag stone stack"
+        informationManager.addItem(this)
+        if (informationManager.stones.value === 0) this.use()
     }
 
     use() {

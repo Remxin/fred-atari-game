@@ -42,8 +42,8 @@ class Renderer implements RendererInterface {
                 // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
                 platforms: [ new Platform(250, 100, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left") ],
                 // platforms: [],
-                // enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "l")],
-                enemies: [],
+                enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "l")],
+                // enemies: [],
                 neutral: [ new Vase(400, 56)],
                 decorations: []
             },

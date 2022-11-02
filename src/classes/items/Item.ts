@@ -1,7 +1,13 @@
-import { app, player, informationManager, gameObjects } from "../../main"
+import { app, player, informationManager, gameObjects, spriteSheet } from "../../main"
 import UUID from "../../helpers/uuid"
+import BagStoneStack from "../bagItems/BagStoneStack"
+import BagOxygen from "../bagItems/BagOxygen"
+import ImageMapper from "../ImageMapper"
+import BagDynamite from "../bagItems/BagDynamite"
+import BagHat from "../bagItems/BagHat"
+import BagShield from "../bagItems/BagShield"
 
-export type itemType = "stone stack" | "cactus" | "oxygen" | "hat" | "shield" | "dynamite"
+export type itemType = "stone stack" | "cactus" | "oxygen" | "hat" | "shield" | "dynamite" | "extra life"
 
 class Item {
     id: string
@@ -19,11 +25,12 @@ class Item {
         this.width = 50
         this.height = 50
         this.type = "item"
+        this.graphics = { cords: ImageMapper.getItemImageCords(this.class) }
     }
 
     draw() {
-        app.c.fillStyle = "green"
-        app.c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        console.log(this.graphics.cords)
+        app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
     checkIfPlayerPicked() {
@@ -34,9 +41,15 @@ class Item {
 
     private pick() {
         this.remove()
-
-        // const 
-
+        
+        let bagItem = null
+        if (this.class === "stone stack") bagItem = new BagStoneStack()
+        else if (this.class === "oxygen") bagItem = new BagOxygen()
+        else if (this.class === "dynamite") bagItem = new BagDynamite()
+        else if (this.class === "extra life") informationManager.updateLives(informationManager.lives.value + 1)
+        else if (this.class === "hat") bagItem = new BagHat()
+        else if (this.class === "shield") bagItem = new BagShield()
+        new BagShield()
     }
 
     remove() {

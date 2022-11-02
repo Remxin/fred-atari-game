@@ -35,7 +35,8 @@ class Vase {
     getRandomItem() {
         const random = Math.round(Math.random() * 100)
 
-        if (random < 35) this.itemInside = "stone stack"
+        if (random < 25) this.itemInside = "stone stack"
+        else if (random < 40) this.itemInside = "extra life"
         else if (random < 50) this.itemInside = "oxygen"
         else if (random < 70) this.itemInside = "cactus"
         else if (random < 80) this.itemInside = "hat"

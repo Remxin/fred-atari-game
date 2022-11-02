@@ -1,5 +1,6 @@
 import { spriteSheet } from "../main"
 import { platformType, platformLenght, plarformTurnDirection } from "./Platform"
+import { itemType } from "./items/Item"
 
 export type keyType = "0" | '1' | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "stone" | "life" | "item placeholder" | "bag stone stack" | "bag hat" | "bag shield" | "bag oxygen"
 
@@ -130,6 +131,19 @@ class ImageMapper {
 
     static getVaseCords = () => {
       return { x: 2, y: 1103, width: 61, height: 58}
+    }
+
+    static getItemImageCords = (itemName: itemType) => {
+      let returnCords = { x: 0, y: 0, width: 0, height: 0}
+
+      if (itemName === "extra life") returnCords = { x: 83, y: 1106, width: 30, height: 57}
+      else if (itemName === "dynamite") returnCords = { x: 134, y: 1108, width: 27, height: 53}
+      else if (itemName === "hat") returnCords = {x: 181, y: 1107, width: 53, height: 53}
+      else if (itemName === "oxygen") returnCords = { x: 254, y: 1110, width: 46, height: 53}
+      else if (itemName === "shield") returnCords = {x: 320, y: 1112, width: 39, height: 51}
+      else if (itemName === "stone stack") returnCords = { x: 379, y: 1112, width: 85, height: 51}
+
+      return returnCords
     }
 }
 

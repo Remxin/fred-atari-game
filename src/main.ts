@@ -51,7 +51,7 @@ export const gameObjects = {
 }
 
 export const spriteSheet = new Image()
-spriteSheet.src = "../img/spritesheet.png"
+spriteSheet.src = "../img/spritesheetv2.png"
 
 function loadSprite() {
     return new Promise((resolve, reject) => {
@@ -77,7 +77,7 @@ async function startGame() {
     // show bottom data
     informationManager.addScorePoints(1)
     informationManager.updateOxygen(0)
-    informationManager.updateStones(19)
+    informationManager.updateStones(11)
     informationManager.updateLives(5)
     // informationManager.resetItems()
 
