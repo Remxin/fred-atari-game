@@ -149,25 +149,46 @@ class ImageMapper {
     static getFrogImageCords = (isMovingRight: boolean, isMoving: boolean, animPhase: number) => {
       let returnCords = { x: 0, y: 154, width: 60, height: 55}
 
-      const phase = animPhase % 3
+      const phase = animPhase % 4
 
       if (!isMoving) { // stays in place 
         if (phase === 0) returnCords.x = 2
         else if (phase === 1) returnCords.x = 82
         else if (phase === 2) returnCords.x = 162
+        else if (phase === 3) returnCords.x = 82
 
 
       } else { // moving
         if (isMovingRight) { // right
           if (phase === 0) returnCords.x = 242
           else if (phase === 1) returnCords.x = 306
-          else if (phase === 2) returnCords.x = 82
-
+          else if (phase === 2) returnCords.x = 306
+          else if (phase === 3) returnCords.x = 82
+          
         } else { // left
           if (phase === 0) returnCords.x = 457
           else if (phase === 1) returnCords.x = 529
-          else if (phase === 2) returnCords.x = 385
+          else if (phase === 2) returnCords.x = 529
+          else if (phase === 3) returnCords.x = 385
         }
+      }
+
+      return returnCords
+    }
+
+    static getFlameImgCords = (animPhase: number, flameDirection: "left" | "right") => {
+      let returnCords = { x: 0, y: 1186, width: 78, height: 88}
+      
+      if (flameDirection === "right") {
+        if (animPhase === 0) returnCords.x = 1
+        else if (animPhase === 1) returnCords.x = 99
+        else if (animPhase === 2) returnCords.x = 200
+
+
+      } else {
+        if (animPhase === 0) returnCords.x = 297
+        else if (animPhase === 1) returnCords.x = 395
+        else if (animPhase === 2) returnCords.x = 496
       }
 
       return returnCords

@@ -1,6 +1,7 @@
 import { isThisTypeNode, textChangeRangeIsUnchanged } from "../../node_modules/typescript/lib/typescript"
 import { app, pressedKeys, gameObjects, informationManager, renderer, spriteSheet, player } from "../main"
 import BagStoneStack from "./bagItems/BagStoneStack"
+import Flame from "./Flame"
 import ImageMapper from "./ImageMapper"
 import Stone from "./Stone"
 
@@ -17,6 +18,8 @@ const maxAnimValue = {
     move: 24, jump: 10000
 }
 
+const flameConsumptionDelay = 3
+
 interface PlayerInterface {
     position: { x: number, y: number},
     velocity: { x: number, y: number}
@@ -26,6 +29,7 @@ interface PlayerInterface {
     floating: { isfloating: boolean, direction: "" | "left" | "right", animPhase: number}
     turnDirection: "left" | "right"
     stoneThrown: boolean
+    flame: { launched: boolean, obj: Flame, incrementer: number}
     lastPos: { x: number, y: number }
     // floatingDirection: "" | "left" | "right"
     weaponChosen: { timeout: number, type: "stones" | "fire", stoneDelay: number}
@@ -46,6 +50,7 @@ class Player implements PlayerInterface {
     weaponChosen: { timeout: number, type: "stones" | "fire", stoneDelay: number}
     animProps: { moving: boolean; animJumpPhase: number, animMovePhase: number, previousDirection: "left" | "right"}
     graphics: { cords: {x: number, y: number, height: number, width: number }}
+    flame: { launched: boolean, obj: Flame, incrementer: number }
 
 
     
@@ -59,6 +64,7 @@ class Player implements PlayerInterface {
         this.floating = { isfloating: false, direction: "", animPhase: 1}
         this.turnDirection = "right"
         this.stoneThrown = false
+        this.flame = { launched: false, obj: null, incrementer: 0}
         this.lastPos = { x: 0, y: 0}
         this.weaponChosen = { timeout: 0, type: "stones", stoneDelay: 0}
         this.animProps = { moving: false, animJumpPhase: 0, animMovePhase: 0, previousDirection: "right"}
@@ -274,13 +280,40 @@ class Player implements PlayerInterface {
 
                 // preventing from spamming stones
                 this.weaponChosen.stoneDelay = 1
+
+                if (informationManager.stones.value === 0) this.weaponChosen.type = "fire"
                 setTimeout(() => {
                     this.weaponChosen.stoneDelay = 0
                 },  stoneDelayValue)
             } else if (this.weaponChosen.type === "fire") {
+                if (informationManager.oxygen.value === 0) return
 
+                if (!this.flame.launched) {
+                    this.flame.obj = new Flame()
+                    gameObjects.playerFriendly.push(this.flame.obj)
+                    this.flame.launched = true
+                } else {
+                    this.flame.obj.update()
+                }
+
+                if (this.flame.incrementer === flameConsumptionDelay) {
+                    informationManager.updateOxygen(informationManager.oxygen.value - 1)
+                    if (informationManager.oxygen.value === 0) {
+                        this.weaponChosen.type = "stones"
+                        this.flame.obj.remove()
+                    }
+                    this.flame.incrementer = 0
+                }
+
+
+                this.flame.incrementer += 1
             }
-        }
+        } else {
+            if (this.weaponChosen.type === "fire" && this.flame.launched) {
+                this.flame.obj.remove()
+                this.flame.launched = false
+            }
+        }// TODO: delete flames from player friendly objects
     }
 
     blockOptions() {

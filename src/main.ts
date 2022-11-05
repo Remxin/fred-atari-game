@@ -10,6 +10,8 @@ import BagStoneStack from "./classes/bagItems/BagStoneStack"
 import Vase from "./classes/Vase"
 // import StoneStack from "./classes/items/StoneStack"
 import Item from "./classes/items/Item"
+import Flame from "./classes/Flame"
+import BagOxygen from "./classes/bagItems/BagOxygen"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
@@ -46,12 +48,12 @@ export const pressedKeys = {
 
 export const gameObjects = {
     collidable: [] as (Platform|Frog|Cactus)[],
-    playerFriendly: [] as Stone[],
+    playerFriendly: [] as (Stone|Flame)[],
     nonCollidable: [] as (Vase | Item)[]
 }
 
 export const spriteSheet = new Image()
-spriteSheet.src = "../img/spritesheetv2.png"
+spriteSheet.src = "../img/spritesheetv3.png"
 
 function loadSprite() {
     return new Promise((resolve, reject) => {
@@ -81,7 +83,8 @@ async function startGame() {
     informationManager.updateLives(5)
     // informationManager.resetItems()
 
-    
+    // ! DELETE THIS IS ONLY FOR TESTS
+    new BagOxygen()
     
     // animate game
     function startAnim() {

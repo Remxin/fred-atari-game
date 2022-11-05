@@ -184,10 +184,7 @@ class InformationManager implements InformationManagerInterface{
     }
 
     deleteItem (deletedItem: BagItem) {
-        console.log(deletedItem)
         const itemIndex = this.bag.items.findIndex((item) => item.class === deletedItem.class)
-        console.log(itemIndex)
-        console.log(this.bag.items)
         if (itemIndex === -1) throw new Error("Item index out of range (please check deleteItem function at renderer)")
 
         this.bag.items.splice(itemIndex, 1) // deleting item from bag

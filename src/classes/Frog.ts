@@ -107,14 +107,17 @@ class Frog extends Enemy implements FrogInterface{
             player.die()
         }
 
-        this.anim.incrementer += 1
+        if(this.isMoving) {
+         this.anim.incrementer += 1
+        } else {
+         this.anim.incrementer += 0.7
+        }
 
         if (this.anim.incrementer >= CONSTANTS.animBreakPoint) {
          this.anim.incrementer = 0
          this.anim.phase += 1
         }
 
-        console.log(this.isMoving)
 
       //   app.c.fillStyle = "orange"
         this.graphics = { cords: ImageMapper.getFrogImageCords(!this.movingRight, this.isMoving, this.anim.phase)}
