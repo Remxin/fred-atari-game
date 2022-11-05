@@ -1,9 +1,11 @@
 import Enemy from "./Enemy";
-import { app } from "../main";
+import { app, spriteSheet } from "../main";
+import ImageMapper from "./ImageMapper";
 
 const CONSTANTS = {
-    velocity: { x: 5, y: 1},
-    stayTimeout: 40
+    velocity: { x: 3, y: 1},
+    stayTimeout: 50,
+    animBreakPoint: 10
 }
 
 interface FrogInterface {
@@ -18,6 +20,9 @@ interface FrogInterface {
     class: "frog"
     isFloating: boolean
     movingRight: boolean
+    anim: { phase: number, incrementer: number}
+    isMoving: boolean
+    graphics: { cords: { x: number, y: number, height: number, width: number }}
 }
 class Frog extends Enemy implements FrogInterface{
     id: string
@@ -29,19 +34,26 @@ class Frog extends Enemy implements FrogInterface{
     isFloating: boolean
     abstractPos: {x: number, y: number}
     movingRight: boolean;
+    anim: { phase: number, incrementer: number}
+    isMoving: boolean
+    graphics: { cords: { x: number, y: number, height: number, width: number }}
+    
 
     constructor(x: number, y: number, movementMin: number, movementMax: number) {
         super(x, y)
-        this.width = 30
-        this.height = 30
+        this.width = 45
+        this.height = 45
         this.type = "enemy"
         this.class = "frog"
         this.velocity = CONSTANTS.velocity
         this.isFloating = true
+        this.isMoving = false
         this.stayTimeout = CONSTANTS.stayTimeout
         this.movementRange = { min: movementMin, max: movementMax}
         this.abstractPos = { x: 0, y: 0}
-        this.movingRight = true    
+        this.movingRight = true   
+        this.isMoving = false 
+        this.anim = { phase: 0, incrementer: 0}
     }
 
     update() {
@@ -58,18 +70,24 @@ class Frog extends Enemy implements FrogInterface{
          
          // force frog to move right
          if (this.abstractPos.x <= this.movementRange.min && this.stayTimeout === 0) {
+            // console.log('right')
             this.movingRight = true
+            this.isMoving = false
             this.stayTimeout = CONSTANTS.stayTimeout
          }
 
          // force frog to move left
          if (this.abstractPos.x >= this.movementRange.max && this.stayTimeout === 0) {
             this.movingRight = false
+            this.isMoving = false
             this.stayTimeout = CONSTANTS.stayTimeout
          }
 
          if (this.stayTimeout > 0) {
+            // this.isMoving = false
             this.stayTimeout -= 1
+         } else {
+            this.isMoving = true
          }
          // movement
          if (this.movingRight && this.stayTimeout === 0) {
@@ -88,8 +106,20 @@ class Frog extends Enemy implements FrogInterface{
         if (this.position.x <= player.position.x + player.width && this.position.x + this.width >= player.position.x && this.position.y >= player.position.x && this.position.y + this.height<= player.position.y + player.height) {
             player.die()
         }
-        app.c.fillStyle = "orange"
-        app.c.fillRect(this.position.x ,this.position.y, this.width, this.height)
+
+        this.anim.incrementer += 1
+
+        if (this.anim.incrementer >= CONSTANTS.animBreakPoint) {
+         this.anim.incrementer = 0
+         this.anim.phase += 1
+        }
+
+        console.log(this.isMoving)
+
+      //   app.c.fillStyle = "orange"
+        this.graphics = { cords: ImageMapper.getFrogImageCords(!this.movingRight, this.isMoving, this.anim.phase)}
+      //   app.c.fillRect(this.position.x ,this.position.y, this.width, this.height)
+      app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
 }

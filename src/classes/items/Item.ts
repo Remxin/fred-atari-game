@@ -49,7 +49,6 @@ class Item {
         else if (this.class === "extra life") informationManager.updateLives(informationManager.lives.value + 1)
         else if (this.class === "hat") bagItem = new BagHat()
         else if (this.class === "shield") bagItem = new BagShield()
-        new BagShield()
     }
 
     remove() {

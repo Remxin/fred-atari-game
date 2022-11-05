@@ -86,24 +86,10 @@ async function startGame() {
     // animate game
     function startAnim() {
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
-        for (let gameObj of gameObjects.collidable) {
-            if (gameObj.type === "enemy" && gameObj.class !== "cactus") {
-                gameObj.update()
-            }
-        }
         
-        for (let playerFriendlyObj of gameObjects.playerFriendly) {
-            playerFriendlyObj.draw()
-        }
-
-        for (let nonCollidable of gameObjects.nonCollidable) {
-            nonCollidable.draw()
-            
-            if (nonCollidable.type !== "item") break
-            nonCollidable.checkIfPlayerPicked()
-        }
+    
         
-        // initialize renderer (it will automatically render new objects and delte unnecessary ones)
+        // initialize renderer (it will automatically render new objects and delete unnecessary ones)
         renderer.trackRendering()
         renderer.updateGameObjects()
         player.update()

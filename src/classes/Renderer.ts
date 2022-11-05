@@ -60,12 +60,31 @@ class Renderer implements RendererInterface {
     }
 
     updateGameObjects() {
-        for (let gameObj of gameObjects.collidable) {
-            gameObj.draw()
+        // for (let gameObj of gameObjects.collidable) {
+        //     gameObj.draw()
+        // }
+
+        // for (let gameObj of gameObjects.nonCollidable) {
+        //     gameObj.draw()
+        // }
+
+        for (let playerFriendlyObj of gameObjects.playerFriendly) {
+            playerFriendlyObj.draw()
+        }
+        
+        for (let nonCollidable of gameObjects.nonCollidable) {
+            nonCollidable.draw()
+            
+            if (nonCollidable.type !== "item") break
+            nonCollidable.checkIfPlayerPicked()
         }
 
-        for (let gameObj of gameObjects.nonCollidable) {
-            gameObj.draw()
+        for (let gameObj of gameObjects.collidable) {
+            if (gameObj.type === "enemy" && gameObj.class !== "cactus") {
+                gameObj.update()
+            } else {
+                gameObj.draw()
+            }
         }
 
         

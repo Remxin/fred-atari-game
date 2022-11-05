@@ -1,5 +1,6 @@
 import { isThisTypeNode, textChangeRangeIsUnchanged } from "../../node_modules/typescript/lib/typescript"
 import { app, pressedKeys, gameObjects, informationManager, renderer, spriteSheet, player } from "../main"
+import BagStoneStack from "./bagItems/BagStoneStack"
 import ImageMapper from "./ImageMapper"
 import Stone from "./Stone"
 
@@ -265,7 +266,7 @@ class Player implements PlayerInterface {
                 informationManager.updateStones(informationManager.stones.value - 1)
     
                 if (informationManager.stones.value === 0) {
-                    const stoneStack = informationManager.bag.items.find((i) => i.class === "bag stone stack")
+                    const stoneStack = informationManager.bag.items.find((i) => i.class === "bag stone stack") as BagStoneStack
                     if (stoneStack) {
                         stoneStack.use()
                     }

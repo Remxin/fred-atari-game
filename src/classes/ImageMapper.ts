@@ -145,6 +145,33 @@ class ImageMapper {
 
       return returnCords
     }
+
+    static getFrogImageCords = (isMovingRight: boolean, isMoving: boolean, animPhase: number) => {
+      let returnCords = { x: 0, y: 154, width: 60, height: 55}
+
+      const phase = animPhase % 3
+
+      if (!isMoving) { // stays in place 
+        if (phase === 0) returnCords.x = 2
+        else if (phase === 1) returnCords.x = 82
+        else if (phase === 2) returnCords.x = 162
+
+
+      } else { // moving
+        if (isMovingRight) { // right
+          if (phase === 0) returnCords.x = 242
+          else if (phase === 1) returnCords.x = 306
+          else if (phase === 2) returnCords.x = 82
+
+        } else { // left
+          if (phase === 0) returnCords.x = 457
+          else if (phase === 1) returnCords.x = 529
+          else if (phase === 2) returnCords.x = 385
+        }
+      }
+
+      return returnCords
+    }
 }
 
 export default ImageMapper
