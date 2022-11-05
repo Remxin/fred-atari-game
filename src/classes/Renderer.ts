@@ -40,9 +40,9 @@ class Renderer implements RendererInterface {
                 abstractionPos: { min: -200, max: 2000},
                 reached: false,
                 // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
-                platforms: [ new Platform(250, 100, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left") ],
+                platforms: [ new Platform(250, 140, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left") ],
                 // platforms: [],
-                enemies: [ new Frog(250, 100, 0, 300), new Cactus(200, 50, "l")],
+                enemies: [ new Frog(250, 100, 0, 300), new Cactus(-100, 160, "l", "")],
                 // enemies: [],
                 neutral: [ new Vase(400, 56)],
                 decorations: []

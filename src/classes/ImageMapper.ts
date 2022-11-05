@@ -1,6 +1,7 @@
 import { spriteSheet } from "../main"
 import { platformType, platformLenght, plarformTurnDirection } from "./Platform"
 import { itemType } from "./items/Item"
+import { sizeType, directionType } from "./Cactus"
 
 export type keyType = "0" | '1' | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "stone" | "life" | "item placeholder" | "bag stone stack" | "bag hat" | "bag shield" | "bag oxygen"
 
@@ -189,6 +190,35 @@ class ImageMapper {
         if (animPhase === 0) returnCords.x = 297
         else if (animPhase === 1) returnCords.x = 395
         else if (animPhase === 2) returnCords.x = 496
+      }
+
+      return returnCords
+    }
+
+    static getCactusImageCords = (size: sizeType, direction: directionType) => {
+      let returnCords = { x: 0, y: 287, width: 0, height: 0}
+
+      if (direction === "") {
+        returnCords.width = 69
+
+        if (size === "lg") returnCords = { ...returnCords, x: 0, height: 436} // 723
+        else if (size === "l") returnCords = { ...returnCords, x: 95, height: 364} // 651
+        else if (size === "m") returnCords = { ...returnCords, x: 392, height: 212} // 489
+        else if (size === "s") returnCords = { ...returnCords, x: 486, height: 135} // 412
+        else returnCords = { ...returnCords, x: 574, height: 45 } // 332
+
+      } else if (direction === "left") {
+        returnCords.width = 76
+
+        if (size === "s") returnCords = {...returnCords, x: 662, height: 125 } // 402
+        else returnCords = {...returnCords, x: 280, height: 206 } // 483
+
+      } else if (direction === "right") {
+        returnCords.width = 76
+
+        if (size === "s") returnCords = {...returnCords, x: 758, height: 125 } // 402
+        else returnCords = {...returnCords, x: 184, height: 206 } // 483
+
       }
 
       return returnCords
