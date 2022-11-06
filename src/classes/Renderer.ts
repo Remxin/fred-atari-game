@@ -3,12 +3,13 @@ import Frog from "./Frog"
 import Cactus from "./Cactus"
 import Platform from "./Platform"
 import Vase from "./Vase"
+import Bird from "./Bird"
 
 type breakPointType = {
     abstractionPos: { min: number, max: number }
     reached: boolean
     platforms: Platform[],
-    enemies: (Frog|Cactus)[],
+    enemies: (Frog|Cactus|Bird)[],
     neutral: (Vase)[],
     decorations: []
     // enemies: 
@@ -37,12 +38,12 @@ class Renderer implements RendererInterface {
         this.currentBreakPointRendered = false
         this.breakPoints = [ // TODO: smaller range breakpoints
             {   
-                abstractionPos: { min: -200, max: 2000},
+                abstractionPos: { min: -1000, max: 2000},
                 reached: false,
                 // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
                 platforms: [ new Platform(250, 140, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left") ],
                 // platforms: [],
-                enemies: [ new Frog(250, 100, 0, 300), new Cactus(-100, 160, "l", "")],
+                enemies: [ new Frog(250, 100, 0, 300), new Cactus(-100, 160, "l", ""), new Bird(300, 440, 0, 300, true)],
                 // enemies: [],
                 neutral: [ new Vase(400, 56)],
                 decorations: []
@@ -60,13 +61,7 @@ class Renderer implements RendererInterface {
     }
 
     updateGameObjects() {
-        // for (let gameObj of gameObjects.collidable) {
-        //     gameObj.draw()
-        // }
-
-        // for (let gameObj of gameObjects.nonCollidable) {
-        //     gameObj.draw()
-        // }
+       
 
         for (let playerFriendlyObj of gameObjects.playerFriendly) {
             playerFriendlyObj.draw()
@@ -127,7 +122,7 @@ class Renderer implements RendererInterface {
     checkEnemyCollisions() {
         for (let gameObj of gameObjects.collidable) {
             if (gameObj.type === "enemy") {
-                if (player.position.x + player.width >= gameObj.position.x && player.position.x <= gameObj.position.x + gameObj.width &&  ((player.position.y + player.height >= gameObj.position.y && player.position.y >= gameObj.position.y + gameObj.height) || (player.position.y <= gameObj.position.y + gameObj.height && player.position.y + player.height >= gameObj.position.y))) {
+                if (player.position.x + player.width >= gameObj.position.x && player.position.x <= gameObj.position.x + gameObj.width && player.position.y <= gameObj.position.y + gameObj.height && player.position.y + player.height >= gameObj.position.y) {
                     player.die()
                 }
             }

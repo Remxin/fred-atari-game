@@ -22,7 +22,7 @@ class Flame {
         this.height = CONSTS.flameH
         this.width = CONSTS.flameW
         const startX = this.flameDirection === "left" ? player.position.x - this.width : player.position.x + player.width
-        this.position = { x: startX, y: player.position.y + Math.round(player.height/5) }
+        this.position = { x: startX, y: player.position.y + Math.round(player.height/10) + player.velocity.y }
         this.anim = { phase: 0, incrementer: 0}
         this.class = "flame"
     }
@@ -42,7 +42,7 @@ class Flame {
     update() {
         this.flameDirection = player.turnDirection
         const startX = this.flameDirection === "left" ? player.position.x - this.width : player.position.x + player.width
-        this.position = { x: startX, y: player.position.y + Math.round(player.height/5) }
+        this.position = { x: startX, y: player.position.y + Math.round(player.height/10) + player.velocity.y }
     }
 
     checkEnemyCollision() {
@@ -50,7 +50,6 @@ class Flame {
             if (collidableObj.type !== "enemy" || collidableObj.class === "cactus") continue
   
             if (this.position.x + this.width >= collidableObj.position.x && this.position.x <= collidableObj.position.x + collidableObj.width && this.position.y <= collidableObj.position.y + collidableObj.height && this.position.y + this.height >= collidableObj.position.y) {
-                console.log(collidableObj)
                 collidableObj.remove()
             }
         }

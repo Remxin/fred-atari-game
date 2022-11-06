@@ -206,8 +206,6 @@ class Player implements PlayerInterface {
                     this.velocity.y = 0
                     this.position.y = gameObj.position.y - this.height
                     this.floating.isfloating = false
-                } else if (gameObj.type === "enemy") {
-                    this.die()
                 }
                 // this.position.y = platform.height + platform.position.y - this.height
             } 

@@ -12,6 +12,8 @@ import Vase from "./classes/Vase"
 import Item from "./classes/items/Item"
 import Flame from "./classes/Flame"
 import BagOxygen from "./classes/bagItems/BagOxygen"
+import Bird from "./classes/Bird"
+import BirdProjectile from "./classes/BirdProjectile"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
@@ -47,13 +49,13 @@ export const pressedKeys = {
 }
 
 export const gameObjects = {
-    collidable: [] as (Platform|Frog|Cactus)[],
+    collidable: [] as (Platform|Frog|Cactus|Bird|BirdProjectile)[],
     playerFriendly: [] as (Stone|Flame)[],
     nonCollidable: [] as (Vase | Item)[]
 }
 
 export const spriteSheet = new Image()
-spriteSheet.src = "../img/spritesheetv3.png"
+spriteSheet.src = "../img/spritesheet.png"
 
 function loadSprite() {
     return new Promise((resolve, reject) => {

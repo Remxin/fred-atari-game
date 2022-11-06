@@ -223,6 +223,37 @@ class ImageMapper {
 
       return returnCords
     }
+
+    static getBirdImageCords(isMoving: boolean, animPhase: number, turnDirection: "left" | "right") {
+      let returnCords = { x: 0, y: 231, width: 62, height: 36}
+
+      if (!isMoving) { // stay in place
+        if (animPhase === 0) returnCords.x = 2
+        else if (animPhase === 1) returnCords.x = 164
+        else if (animPhase === 2) returnCords.x = 83
+
+
+      } else { // movement
+
+        if (turnDirection === "left") {
+          if (animPhase === 0) returnCords.x = 397
+          else if (animPhase === 1) returnCords.x = 245
+          else if (animPhase === 2) returnCords.x = 316
+
+        } else {
+          if (animPhase === 0) returnCords.x = 620
+          else if (animPhase === 1) returnCords.x = 470
+          else if (animPhase === 2) returnCords.x = 541
+        }
+      }
+
+      return returnCords
+    }
+
+    static getBirdProjectileImageCords = () => {
+      let returnCords = {x: 689, y: 232, width: 7, height: 17}
+      return returnCords
+    }
 }
 
 export default ImageMapper
