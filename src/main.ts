@@ -14,6 +14,8 @@ import Flame from "./classes/Flame"
 import BagOxygen from "./classes/bagItems/BagOxygen"
 import Bird from "./classes/Bird"
 import BirdProjectile from "./classes/BirdProjectile"
+import BagShield from "./classes/bagItems/BagShield"
+import BagHat from "./classes/bagItems/BagHat"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
@@ -57,9 +59,12 @@ export const gameObjects = {
 export const spriteSheet = new Image()
 spriteSheet.src = "../img/spritesheet.png"
 
-function loadSprite() {
+export const brightSpriteSheet = new Image()
+brightSpriteSheet.src = "../img/spritesheet_bright.png"
+
+function loadSprite(sprite: HTMLImageElement) {
     return new Promise((resolve, reject) => {
-        spriteSheet.onload = () => {
+        sprite.onload = () => {
             resolve(true)
         }
     })
@@ -67,7 +72,8 @@ function loadSprite() {
 
 
 async function startGame() {
-    await loadSprite()
+    await loadSprite(spriteSheet)
+    await loadSprite(brightSpriteSheet)
     // resize canvas
     app.canvas.width = app.canvasProps.width
     app.canvas.height = app.canvasProps.height - 6
@@ -86,7 +92,8 @@ async function startGame() {
     // informationManager.resetItems()
 
     // ! DELETE THIS IS ONLY FOR TESTS
-    new BagOxygen()
+    // new BagOxygen()
+    new BagHat()
     
     // animate game
     function startAnim() {

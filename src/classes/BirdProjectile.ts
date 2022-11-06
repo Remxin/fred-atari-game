@@ -3,9 +3,9 @@ import { app, gameObjects, spriteSheet } from "../main";
 import ImageMapper from "./ImageMapper";
 
 const CONSTANTS = {
-    startVelocity: { y: 2 },
-    width: 10,
-    height: 30
+    startVelocity: { y: 3 },
+    width: 8,
+    height: 25
 }
 
 class BirdProjectile extends Enemy {

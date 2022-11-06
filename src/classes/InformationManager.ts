@@ -25,7 +25,7 @@ interface InformationManagerInterface {
     stones: { div: HTMLDivElement, value: number, max: number }
     lives: { div: HTMLDivElement, value: number, max: number }
     oxygen: { div: HTMLDivElement, value: number, max: number }
-    bag: { div: HTMLDivElement, items: (BagStoneStack|BagOxygen|BagHat|BagShield)[], maxLen: number}
+    bag: { div: HTMLDivElement, items: (BagStoneStack|BagOxygen|BagHat|BagShield)[], maxLen: number, itemsImgs: HTMLImageElement[]}
 }
 class InformationManager implements InformationManagerInterface{
     playerPosIndex: { div: HTMLDivElement; min: number; max: number }
@@ -34,7 +34,7 @@ class InformationManager implements InformationManagerInterface{
     stones: { div: HTMLDivElement; value: number; max: number }
     lives: { div: HTMLDivElement; value: number, max: number }
     oxygen: { div: HTMLDivElement; value: number; max: number }
-    bag: { div: HTMLDivElement; items: (BagStoneStack|BagOxygen|BagHat|BagShield)[], maxLen: number }
+    bag: { div: HTMLDivElement; items: (BagStoneStack|BagOxygen|BagHat|BagShield)[], maxLen: number, itemsImgs: HTMLImageElement[] }
 
     constructor() {
         this.playerPosIndex = { div: document.getElementById("player-on-map") as HTMLDivElement, min: playerContext.mapSize.min, max: playerContext.mapSize.max}
@@ -43,7 +43,7 @@ class InformationManager implements InformationManagerInterface{
         this.stones = { div: document.getElementById("stones") as HTMLDivElement, value: playerContext.stones.current, max: playerContext.stones.max},
         this.lives = { div: document.getElementById("lives") as HTMLDivElement, value: playerContext.lives.current, max: playerContext.lives.max}
         this.oxygen = { div: document.getElementById("bottle-fill") as HTMLDivElement, value: playerContext.oxygen.current, max: playerContext.oxygen.max}
-        this.bag = { div: document.getElementById("bag") as HTMLDivElement, items: [], maxLen: 8}
+        this.bag = { div: document.getElementById("bag") as HTMLDivElement, items: [], maxLen: 8, itemsImgs: []}
 
     }
 
@@ -129,6 +129,7 @@ class InformationManager implements InformationManagerInterface{
             const img = document.createElement("img")
             img.alt = "stone image"
             img.src = ImageMapper.getImage("stone")
+
             
             const isEven = i % 2 === 0
             if (isEven) {
@@ -153,13 +154,16 @@ class InformationManager implements InformationManagerInterface{
 
     private showItems() {
         this.bag.div.innerHTML = ""
+        this.bag.itemsImgs = []
         const blankItems = this.bag.maxLen - this.bag.items.length
 
 
         for (let item of this.bag.items) {
             const img = document.createElement("img")
-            img.alt = "item image"
+            img.alt = item.class
             img.src = ImageMapper.getImage(item.class)
+
+            this.bag.itemsImgs.push(img)
 
             this.bag.div.appendChild(img)
         }
@@ -188,6 +192,8 @@ class InformationManager implements InformationManagerInterface{
         if (itemIndex === -1) throw new Error("Item index out of range (please check deleteItem function at renderer)")
 
         this.bag.items.splice(itemIndex, 1) // deleting item from bag
+
+
 
         this.showItems()
 

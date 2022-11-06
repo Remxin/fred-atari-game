@@ -1,5 +1,6 @@
 import { isThisTypeNode, textChangeRangeIsUnchanged } from "../../node_modules/typescript/lib/typescript"
-import { app, pressedKeys, gameObjects, informationManager, renderer, spriteSheet, player } from "../main"
+import { app, pressedKeys, gameObjects, informationManager, renderer, spriteSheet, player, brightSpriteSheet } from "../main"
+import BagHat from "./bagItems/BagHat"
 import BagStoneStack from "./bagItems/BagStoneStack"
 import Flame from "./Flame"
 import ImageMapper from "./ImageMapper"
@@ -35,6 +36,7 @@ interface PlayerInterface {
     weaponChosen: { timeout: number, type: "stones" | "fire", stoneDelay: number}
     animProps: { moving: boolean, animJumpPhase: number, animMovePhase: number}
     graphics: { cords: {x: number, y: number, height: number, width: number }}
+    alpha: { in: boolean, anim: number}
 
 }
 class Player implements PlayerInterface {
@@ -51,6 +53,7 @@ class Player implements PlayerInterface {
     animProps: { moving: boolean; animJumpPhase: number, animMovePhase: number, previousDirection: "left" | "right"}
     graphics: { cords: {x: number, y: number, height: number, width: number }}
     flame: { launched: boolean, obj: Flame, incrementer: number }
+    alpha: { in: boolean, anim: number}
 
 
     
@@ -68,12 +71,19 @@ class Player implements PlayerInterface {
         this.lastPos = { x: 0, y: 0}
         this.weaponChosen = { timeout: 0, type: "stones", stoneDelay: 0}
         this.animProps = { moving: false, animJumpPhase: 0, animMovePhase: 0, previousDirection: "right"}
+        this.alpha = { in: false, anim: 0}
       
     }
 
     draw() {
+        let currSprite
+
+        if (this.alpha.in) currSprite = this.alpha.anim === 0 ? spriteSheet : brightSpriteSheet
+        else currSprite = spriteSheet
+        
+
         this.graphics = { cords: ImageMapper.getPlayerImageCords(this.animProps.moving, this.animProps.animJumpPhase, this.animProps.animMovePhase, this.floating.isfloating, this.turnDirection)}
-        app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
+        app.c.drawImage(currSprite, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
     update() {
@@ -206,6 +216,8 @@ class Player implements PlayerInterface {
                     this.velocity.y = 0
                     this.position.y = gameObj.position.y - this.height
                     this.floating.isfloating = false
+                } else if (gameObj.type === "enemy") {
+                    player.die()
                 }
                 // this.position.y = platform.height + platform.position.y - this.height
             } 
@@ -214,8 +226,12 @@ class Player implements PlayerInterface {
             
             
             if (this.position.y + this.velocity.y < gameObj.position.y + gameObj.height && this.position.y + this.height > gameObj.position.y && this.position.x + this.width > gameObj.position.x && this.position.x < gameObj.position.x + gameObj.width) {
-                this.position.y = gameObj.position.y + gameObj.height
-                this.velocity.y = 1
+                if (gameObj.type === "platform") {
+                    this.position.y = gameObj.position.y + gameObj.height
+                    this.velocity.y = 1
+                } else if (gameObj.type === "enemy") {
+                    this.die()
+                }
             }
 
            
@@ -223,8 +239,11 @@ class Player implements PlayerInterface {
     }
 
     die() {
+        if (this.alpha.in) return
+        const hat = informationManager.bag.items.find(i => i.class === "bag hat") as BagHat
+        if (hat) hat.use()
 
-        // console.log(renderer.playerAbstractionPos.x, this.position.x)
+        if (this.alpha.in) return
         // descrolling view
         const descrollValue = renderer.playerAbstractionPos.x - this.position.x
         // console.log(descrollValue)
