@@ -254,6 +254,27 @@ class ImageMapper {
       let returnCords = {x: 689, y: 232, width: 7, height: 17}
       return returnCords
     }
+
+    static getDeathAnimImageCords = (type: "player" | "enemy", animPhase: number) => {
+      let returnCords = {x: 689, y: 232, width: 7, height: 17}
+      if (type === "player") {
+        if (animPhase === 0) {
+          returnCords = { x: 1113, y: 0, height: 109, width: 64}
+        } else { 
+          returnCords = { x: 1193, y: 0, height: 109, width: 64}
+
+        }
+      } else { 
+        if (animPhase === 0) {
+          returnCords = { x: 2, y: 1015, width: 69, height: 65}
+          
+        } else {
+          returnCords = { x: 91, y: 1015, width: 69, height: 65}
+
+        }
+      }
+      return returnCords
+    }
 }
 
 export default ImageMapper

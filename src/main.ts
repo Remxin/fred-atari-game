@@ -16,6 +16,7 @@ import Bird from "./classes/Bird"
 import BirdProjectile from "./classes/BirdProjectile"
 import BagShield from "./classes/bagItems/BagShield"
 import BagHat from "./classes/bagItems/BagHat"
+import DeathAnim from "./classes/DeathAnim"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
@@ -53,7 +54,7 @@ export const pressedKeys = {
 export const gameObjects = {
     collidable: [] as (Platform|Frog|Cactus|Bird|BirdProjectile)[],
     playerFriendly: [] as (Stone|Flame)[],
-    nonCollidable: [] as (Vase | Item)[]
+    nonCollidable: [] as (Vase | Item | DeathAnim)[]
 }
 
 export const spriteSheet = new Image()
@@ -93,13 +94,14 @@ async function startGame() {
 
     // ! DELETE THIS IS ONLY FOR TESTS
     // new BagOxygen()
-    new BagHat()
+    // new BagHat()
+   
     
     // animate game
     function startAnim() {
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
         
-    
+        
         
         // initialize renderer (it will automatically render new objects and delete unnecessary ones)
         renderer.trackRendering()
@@ -112,7 +114,7 @@ async function startGame() {
         }, app.canvasProps.rerenderStep)
     }
     startAnim()
-
+    
     // listen to keys pressed
     window.onkeydown = (e) => recognizePressedKeys(e)
     window.onkeyup = (e) => unbindPressedKeys(e)

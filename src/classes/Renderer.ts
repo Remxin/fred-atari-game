@@ -4,13 +4,15 @@ import Cactus from "./Cactus"
 import Platform from "./Platform"
 import Vase from "./Vase"
 import Bird from "./Bird"
+import { itemType } from "./items/Item"
+import DeathAnim from "./DeathAnim"
 
 type breakPointType = {
     abstractionPos: { min: number, max: number }
     reached: boolean
     platforms: Platform[],
     enemies: (Frog|Cactus|Bird)[],
-    neutral: (Vase)[],
+    neutral: (Vase|DeathAnim)[],
     decorations: []
     // enemies: 
 }
@@ -45,7 +47,7 @@ class Renderer implements RendererInterface {
                 // platforms: [],
                 enemies: [ new Frog(250, 100, 0, 300), new Cactus(-100, 160, "l", ""), new Bird(300, 440, 0, 300, true)],
                 // enemies: [],
-                neutral: [ new Vase(400, 56)],
+                neutral: [ new Vase(400, 56), new DeathAnim(player.position.x, player.position.y, "player")],
                 decorations: []
             },
             {
@@ -61,7 +63,6 @@ class Renderer implements RendererInterface {
     }
 
     updateGameObjects() {
-       
 
         for (let playerFriendlyObj of gameObjects.playerFriendly) {
             playerFriendlyObj.draw()
@@ -70,8 +71,10 @@ class Renderer implements RendererInterface {
         for (let nonCollidable of gameObjects.nonCollidable) {
             nonCollidable.draw()
             
-            if (nonCollidable.type !== "item") break
-            nonCollidable.checkIfPlayerPicked()
+            if (nonCollidable.type === "item") {
+                nonCollidable?.checkIfPlayerPicked()
+            }
+
         }
 
         for (let gameObj of gameObjects.collidable) {

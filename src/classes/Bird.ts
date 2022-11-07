@@ -81,11 +81,6 @@ class Bird extends Enemy {
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
-    remove() {
-        const myIndex = gameObjects.collidable.findIndex((i) => i.id === this.id)
-        gameObjects.collidable.splice(myIndex, 1)
-    }
-
     randomlyShotProjectile() {
         if (this.projectile.delay > 0) return this.projectile.delay -= 1
         const rand = Math.round(Math.random()*100)

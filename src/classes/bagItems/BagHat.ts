@@ -38,7 +38,6 @@ class BagHat extends BagItem {
         }, 1000)
 
         if (this.useTimes === 1) this.launchOpacityInterval()
-        console.log(this.useTimes)
         if (this.useTimes === 0) this.remove()
     }
 

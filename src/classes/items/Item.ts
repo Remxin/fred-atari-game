@@ -26,6 +26,8 @@ class Item {
         this.height = 50
         this.type = "item"
         this.graphics = { cords: ImageMapper.getItemImageCords(this.class) }
+
+        if (this.class === "extra life") this.width = 25
     }
 
     draw() {

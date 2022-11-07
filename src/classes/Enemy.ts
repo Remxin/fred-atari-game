@@ -1,5 +1,6 @@
 import { app, canvasProps, renderer, gameObjects } from "../main"
 import UUID from "../helpers/uuid"
+import DeathAnim from "./DeathAnim"
 
 abstract class Enemy {
     id: String
@@ -25,6 +26,9 @@ abstract class Enemy {
 
         const myGameIndex = gameObjects.collidable.findIndex(e => e.id === this.id)
         gameObjects.collidable.splice(myGameIndex, 1)
+
+        const deathAnim = new DeathAnim(this.position.x, this.position.y, "enemy")
+        gameObjects.nonCollidable.push(deathAnim)
     }
 }
 

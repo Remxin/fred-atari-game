@@ -2,6 +2,7 @@ import { isThisTypeNode, textChangeRangeIsUnchanged } from "../../node_modules/t
 import { app, pressedKeys, gameObjects, informationManager, renderer, spriteSheet, player, brightSpriteSheet } from "../main"
 import BagHat from "./bagItems/BagHat"
 import BagStoneStack from "./bagItems/BagStoneStack"
+import DeathAnim from "./DeathAnim"
 import Flame from "./Flame"
 import ImageMapper from "./ImageMapper"
 import Stone from "./Stone"
@@ -37,6 +38,7 @@ interface PlayerInterface {
     animProps: { moving: boolean, animJumpPhase: number, animMovePhase: number}
     graphics: { cords: {x: number, y: number, height: number, width: number }}
     alpha: { in: boolean, anim: number}
+    death: boolean
 
 }
 class Player implements PlayerInterface {
@@ -54,6 +56,7 @@ class Player implements PlayerInterface {
     graphics: { cords: {x: number, y: number, height: number, width: number }}
     flame: { launched: boolean, obj: Flame, incrementer: number }
     alpha: { in: boolean, anim: number}
+    death: boolean
 
 
     
@@ -72,6 +75,7 @@ class Player implements PlayerInterface {
         this.weaponChosen = { timeout: 0, type: "stones", stoneDelay: 0}
         this.animProps = { moving: false, animJumpPhase: 0, animMovePhase: 0, previousDirection: "right"}
         this.alpha = { in: false, anim: 0}
+        this.death = false
       
     }
 
@@ -87,6 +91,7 @@ class Player implements PlayerInterface {
     }
 
     update() {
+        if (this.death) return
         this.captureMovement()
         this.checkCollisions()
         
@@ -244,25 +249,35 @@ class Player implements PlayerInterface {
         if (hat) hat.use()
 
         if (this.alpha.in) return
-        // descrolling view
-        const descrollValue = renderer.playerAbstractionPos.x - this.position.x
-        // console.log(descrollValue)
-        for (let collidableObj of gameObjects.collidable) {
-            collidableObj.position.x += descrollValue
-        }
-        renderer.playerAbstractionPos.x = startPos.x
-        
+        if (this.death) return
 
-        // reseting stats
-        this.position.x = startPos.x
-        this.position.y = startPos.y
-        this.velocity.y = velocity.y
-        this.floating.direction = ""
+        // creating deatch animation
+        const deathAnim = new DeathAnim(this.position.x, this.position.y, "player")
+        gameObjects.nonCollidable.push(deathAnim)
+        this.death = true
 
-
-
-        // console.log(renderer.playerAbstractionPos.x, this.position.x) 
-        informationManager.updateLives(informationManager.lives.value - 1)
+        setTimeout(() => {
+            // descrolling view
+            const descrollValue = renderer.playerAbstractionPos.x - this.position.x
+            // console.log(descrollValue)
+            for (let collidableObj of gameObjects.collidable) {
+                collidableObj.position.x += descrollValue
+            }
+            renderer.playerAbstractionPos.x = startPos.x
+            
+    
+            // reseting stats
+            this.position.x = startPos.x
+            this.position.y = startPos.y
+            this.velocity.y = velocity.y
+            this.floating.direction = ""
+    
+    
+    
+            // console.log(renderer.playerAbstractionPos.x, this.position.x) 
+            informationManager.updateLives(informationManager.lives.value - 1)
+            this.death = false
+        }, 2000)
     }
 
     manageWeaponUsage() {
