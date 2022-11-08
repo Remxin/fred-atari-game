@@ -17,6 +17,8 @@ import BirdProjectile from "./classes/BirdProjectile"
 import BagShield from "./classes/bagItems/BagShield"
 import BagHat from "./classes/bagItems/BagHat"
 import DeathAnim from "./classes/DeathAnim"
+import PickableStone from "./classes/PickableStone"
+import FragilePlatform from "./classes/FragilePlatform"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
@@ -28,9 +30,9 @@ export const canvasProps = {
     height: window.innerHeight - 250,
     rerenderStep: 20 // higher = better performance
 }
-export const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
 export const informationManager = new InformationManager()
 
+export const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
 export const app = {
     canvas,
     c: canvas.getContext("2d"),
@@ -52,9 +54,9 @@ export const pressedKeys = {
 }
 
 export const gameObjects = {
-    collidable: [] as (Platform|Frog|Cactus|Bird|BirdProjectile)[],
+    collidable: [] as (Platform|Frog|Cactus|Bird|BirdProjectile|FragilePlatform)[],
     playerFriendly: [] as (Stone|Flame)[],
-    nonCollidable: [] as (Vase | Item | DeathAnim)[]
+    nonCollidable: [] as (Vase | Item | DeathAnim | PickableStone|FragilePlatform)[]
 }
 
 export const spriteSheet = new Image()
@@ -100,6 +102,8 @@ async function startGame() {
     // animate game
     function startAnim() {
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
+        app.c.fillStyle = "black"
+        app.c.fillRect(0, 0, canvasProps.width, canvasProps.height)
         
         
         

@@ -275,6 +275,16 @@ class ImageMapper {
       }
       return returnCords
     }
+
+    static getGameStoneImageCords = () => {
+      let returnCords = {x: 2, y: 952, width: 50, height: 45}
+      return returnCords
+    }
+
+    static getFragilePlatformImage = () => {
+      let returnCords = {x: 2, y: 952, width: 50, height: 45}
+      return returnCords
+    }
 }
 
 export default ImageMapper

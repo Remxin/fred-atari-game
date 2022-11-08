@@ -221,6 +221,10 @@ class Player implements PlayerInterface {
                     this.velocity.y = 0
                     this.position.y = gameObj.position.y - this.height
                     this.floating.isfloating = false
+                    
+                    if(gameObj.class === "fragile platform") {
+                        gameObj.break()
+                    }
                 } else if (gameObj.type === "enemy") {
                     player.die()
                 }

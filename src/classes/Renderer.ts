@@ -6,13 +6,15 @@ import Vase from "./Vase"
 import Bird from "./Bird"
 import { itemType } from "./items/Item"
 import DeathAnim from "./DeathAnim"
+import PickableStone from "./PickableStone"
+import FragilePlatform from "./FragilePlatform"
 
 type breakPointType = {
     abstractionPos: { min: number, max: number }
     reached: boolean
-    platforms: Platform[],
+    platforms: (Platform|FragilePlatform)[],
     enemies: (Frog|Cactus|Bird)[],
-    neutral: (Vase|DeathAnim)[],
+    neutral: (Vase|DeathAnim|PickableStone|FragilePlatform)[],
     decorations: []
     // enemies: 
 }
@@ -43,11 +45,11 @@ class Renderer implements RendererInterface {
                 abstractionPos: { min: -1000, max: 2000},
                 reached: false,
                 // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
-                platforms: [ new Platform(250, 140, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left") ],
+                platforms: [ new Platform(250, 140, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left"), new FragilePlatform(500, 200) ],
                 // platforms: [],
                 enemies: [ new Frog(250, 100, 0, 300), new Cactus(-100, 160, "l", ""), new Bird(300, 440, 0, 300, true)],
                 // enemies: [],
-                neutral: [ new Vase(400, 56), new DeathAnim(player.position.x, player.position.y, "player")],
+                neutral: [ new Vase(400, 56), new DeathAnim(player.position.x, player.position.y, "player"), new PickableStone(550, 30)],
                 decorations: []
             },
             {
