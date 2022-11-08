@@ -47,7 +47,7 @@ class Renderer implements RendererInterface {
                 reached: false,
                 platforms: [ new Platform(250, 140, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left"), new FragilePlatform(500, 200) ],
                 enemies: [ new Frog(250, 100, 0, 300), new Cactus(-100, 160, "l", ""), new Bird(300, 440, 0, 300, true)],
-                neutral: [ new Vase(400, 56), new DeathAnim(player.position.x, player.position.y, "player"), new PickableStone(550, 30), new Grass(0, 60, "l")],
+                neutral: [ new Vase(400, 56), new DeathAnim(player.position.x, player.position.y, "player"), new PickableStone(550, 30), new Grass(0, 60, "l", false)],
                 decorations: []
             },
             {

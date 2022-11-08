@@ -32,12 +32,19 @@ class SizeMapper {
         return returnSize
     }
 
-    static getGrassSize(size: "s" | "m" | "l") {
-        let returnSize = { width: 40, height: 0}
+    static getGrassSize(size: "s" | "m" | "l", hanging: boolean) {
+        let returnSize = { width: 0, height: 0}
 
-        if (size === "s") returnSize.height = 20
-        else if (size === "m") returnSize.height = 50
-        else if (size === "l") returnSize.height = 70
+        if (!hanging) {
+            returnSize.width = 40
+            if (size === "s") returnSize.height = 20
+            else if (size === "m") returnSize.height = 50
+            else if (size === "l") returnSize.height = 70
+        } else {
+            returnSize.width = 25
+            if (size === "s") returnSize.height = 20
+            else returnSize.height = 60
+        }
         return returnSize
     }
 }

@@ -11,14 +11,15 @@ class Grass {
     graphics: { cords: { x: number, y: number, width: number, height: number }}
     size: "s" | "m" | "l"
     type: "grass"
+    hanging: boolean
 
-    constructor(x: number, y: number, size: "s" | "m" | "l") {
+    constructor(x: number, y: number, size: "s" | "m" | "l", hanging: boolean) {
         this.id = UUID.genId()
         this.position = { x, y: canvasProps.height - y }
-        const sizeA = SizeMapper.getGrassSize(size)
+        const sizeA = SizeMapper.getGrassSize(size, hanging)
         this.height = sizeA.height
         this.width = sizeA.width
-        this.graphics = { cords: ImageMapper.getGrassImageCords(size)}
+        this.graphics = { cords: ImageMapper.getGrassImageCords(size, hanging)}
         this.type = "grass"
     }
 

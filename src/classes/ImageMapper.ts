@@ -292,12 +292,18 @@ class ImageMapper {
       return returnCords
     }
 
-    static getGrassImageCords = (size: "s" | "m" | "l") => {
+    static getGrassImageCords = (size: "s" | "m" | "l", hanging: boolean) => {
       let returnCords = { x: 0, y: 849, height: 0, width: 60}
 
-      if (size === "s") returnCords = {...returnCords, x: 171, height: 35 }
-      else if (size === "m") returnCords = {...returnCords, x: 82, height: 49 }
-      else returnCords = {...returnCords, x: 2, height:83 }
+      if (!hanging) {
+        if (size === "s") returnCords = {...returnCords, x: 171, height: 35 }
+        else if (size === "m") returnCords = {...returnCords, x: 82, height: 49 }
+        else returnCords = {...returnCords, x: 2, height:83 }
+
+      } else {
+        if (size === "s") returnCords = {...returnCords, x: 235, height: 26, width: 27 }
+        else returnCords = {...returnCords, x: 282, height: 60 }
+      }
 
       return returnCords
     }
