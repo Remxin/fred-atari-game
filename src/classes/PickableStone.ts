@@ -33,6 +33,7 @@ class PickableStone {
 
     use() {
         informationManager.updateStones(informationManager.stones.value + 1)
+        informationManager.addScorePoints(10)
         this.remove()
     }
 

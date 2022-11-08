@@ -19,6 +19,7 @@ import BagHat from "./classes/bagItems/BagHat"
 import DeathAnim from "./classes/DeathAnim"
 import PickableStone from "./classes/PickableStone"
 import FragilePlatform from "./classes/FragilePlatform"
+import Grass from "./classes/Grass"
 
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
@@ -56,7 +57,7 @@ export const pressedKeys = {
 export const gameObjects = {
     collidable: [] as (Platform|Frog|Cactus|Bird|BirdProjectile|FragilePlatform)[],
     playerFriendly: [] as (Stone|Flame)[],
-    nonCollidable: [] as (Vase | Item | DeathAnim | PickableStone|FragilePlatform)[]
+    nonCollidable: [] as (Vase | Item | DeathAnim | PickableStone|FragilePlatform|Grass)[]
 }
 
 export const spriteSheet = new Image()
@@ -88,7 +89,7 @@ async function startGame() {
     player.draw()
 
     // show bottom data
-    informationManager.addScorePoints(1)
+    informationManager.addScorePoints(0)
     informationManager.updateOxygen(0)
     informationManager.updateStones(11)
     informationManager.updateLives(5)

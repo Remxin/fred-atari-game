@@ -281,8 +281,24 @@ class ImageMapper {
       return returnCords
     }
 
-    static getFragilePlatformImage = () => {
-      let returnCords = {x: 2, y: 952, width: 50, height: 45}
+    static getFragilePlatformImage = (isBroken: boolean) => {
+      let returnCords
+      if (!isBroken) {
+        returnCords = {x: 1342, y: 758, width: 103, height: 80} // 1445 838
+
+      } else {
+        returnCords = { x: 1446, y: 755, width: 63, height: 75} // 1509 830
+      }
+      return returnCords
+    }
+
+    static getGrassImageCords = (size: "s" | "m" | "l") => {
+      let returnCords = { x: 0, y: 849, height: 0, width: 60}
+
+      if (size === "s") returnCords = {...returnCords, x: 171, height: 35 }
+      else if (size === "m") returnCords = {...returnCords, x: 82, height: 49 }
+      else returnCords = {...returnCords, x: 2, height:83 }
+
       return returnCords
     }
 }

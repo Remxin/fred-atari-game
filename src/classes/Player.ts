@@ -280,6 +280,7 @@ class Player implements PlayerInterface {
     
             // console.log(renderer.playerAbstractionPos.x, this.position.x) 
             informationManager.updateLives(informationManager.lives.value - 1)
+            informationManager.resetRunScore()
             this.death = false
         }, 2000)
     }

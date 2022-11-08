@@ -1,5 +1,5 @@
 import UUID from "../helpers/uuid"
-import { app, gameObjects } from "../main"
+import { app, gameObjects, spriteSheet } from "../main"
 import ImageMapper from "./ImageMapper"
 
 const CONSTANTS = {
@@ -23,21 +23,21 @@ class FragilePlatform {
         this.position = { x, y}
         this.width = CONSTANTS.pW
         this.height = CONSTANTS.pH
-        this.graphics = { cords: ImageMapper.getFragilePlatformImage()}
         this.type = "platform"
         this.class ="fragile platform"
         this.broken = { level: CONSTANTS.brokeLevel, is: false}
+        this.graphics = { cords: ImageMapper.getFragilePlatformImage(this.broken.is)}
     }
 
     draw() {
-        console.log("draw")
-        app.c.fillStyle = "green"
-        app.c.fillRect(this.position.x ,this.position.y, this.width, this.height)
+        app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
     break() {
         if (this.broken.level > 0) return this.broken.level -= 1
         this.broken.is = true
+
+        this.graphics.cords = ImageMapper.getFragilePlatformImage(this.broken.is)
         // delete from collidable and add to non collidable
         const myIndex = gameObjects.collidable.findIndex(i => i.id === this.id)
         gameObjects.collidable.splice(myIndex, 1)

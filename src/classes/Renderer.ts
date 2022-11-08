@@ -8,13 +8,14 @@ import { itemType } from "./items/Item"
 import DeathAnim from "./DeathAnim"
 import PickableStone from "./PickableStone"
 import FragilePlatform from "./FragilePlatform"
+import Grass from "./Grass"
 
 type breakPointType = {
     abstractionPos: { min: number, max: number }
     reached: boolean
     platforms: (Platform|FragilePlatform)[],
     enemies: (Frog|Cactus|Bird)[],
-    neutral: (Vase|DeathAnim|PickableStone|FragilePlatform)[],
+    neutral: (Vase|DeathAnim|PickableStone|FragilePlatform|Grass)[],
     decorations: []
     // enemies: 
 }
@@ -44,12 +45,9 @@ class Renderer implements RendererInterface {
             {   
                 abstractionPos: { min: -1000, max: 2000},
                 reached: false,
-                // platforms: [ new Platform(200, 980), new Platform(250, 950), new Platform(300, 870) ]
                 platforms: [ new Platform(250, 140, "b", "s", "right"), new Platform(420, 280, "b", "lg", "left"), new FragilePlatform(500, 200) ],
-                // platforms: [],
                 enemies: [ new Frog(250, 100, 0, 300), new Cactus(-100, 160, "l", ""), new Bird(300, 440, 0, 300, true)],
-                // enemies: [],
-                neutral: [ new Vase(400, 56), new DeathAnim(player.position.x, player.position.y, "player"), new PickableStone(550, 30)],
+                neutral: [ new Vase(400, 56), new DeathAnim(player.position.x, player.position.y, "player"), new PickableStone(550, 30), new Grass(0, 60, "l")],
                 decorations: []
             },
             {
@@ -112,10 +110,12 @@ class Renderer implements RendererInterface {
         }
         // update rerendering phase (add new elements, delete previous)
         if (this.playerAbstractionPos.x > this.breakPoints[this.currentBreakPoint].abstractionPos.max) {
+            this.breakPoints[this.currentBreakPoint].reached = false
             this.currentBreakPoint += 1
         }
-
+        
         if (this.playerAbstractionPos.x < this.breakPoints[this.currentBreakPoint].abstractionPos.min) {
+            this.breakPoints[this.currentBreakPoint].reached = false
             this.currentBreakPoint -= 1
         }
     }

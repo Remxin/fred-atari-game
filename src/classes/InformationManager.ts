@@ -54,6 +54,7 @@ class InformationManager implements InformationManagerInterface{
     }
 
     addScorePoints(updateQuantity: number) {
+        console.log(updateQuantity)
         this.runScore.value += updateQuantity
         this.totalScore.value += updateQuantity
 
@@ -62,7 +63,7 @@ class InformationManager implements InformationManagerInterface{
 
         const scoreStr = { run: this.runScore.value + "", total: this.totalScore.value + "" }
         const blankZeros = {run: playerContext.scoreLen - scoreStr.run.length, total: playerContext.scoreLen -  scoreStr.total.length }
-        
+        console.log(this.runScore.value, this.totalScore.value)
 
         Object.values(blankZeros).forEach((blankZero, index) => {
             for (let i = 0; i < blankZero; i++) {

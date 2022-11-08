@@ -1,4 +1,4 @@
-import { app, canvasProps, renderer, gameObjects } from "../main"
+import { app, canvasProps, renderer, gameObjects, informationManager } from "../main"
 import UUID from "../helpers/uuid"
 import DeathAnim from "./DeathAnim"
 
@@ -7,11 +7,13 @@ abstract class Enemy {
     position: { x: number, y: number}
     width: number
     height: number
+    deleted: boolean
 
     constructor(x: number, y: number) {
         // console.log();
         this.position = { x, y: canvasProps.height - y }
         this.id = UUID.genId()
+        this.deleted = false
     }
 
     draw() {
@@ -29,6 +31,7 @@ abstract class Enemy {
 
         const deathAnim = new DeathAnim(this.position.x, this.position.y, "enemy")
         gameObjects.nonCollidable.push(deathAnim)
+
     }
 }
 
