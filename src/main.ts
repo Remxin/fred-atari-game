@@ -1,3 +1,7 @@
+// ____ FEATURES ____
+import { applyMobile } from "./features/applyMobile"
+
+// ____ CLASSES ____
 import Player from "./classes/Player"
 import Platform from "./classes/Platform"
 import AudioManager from "./classes/AudioManager"
@@ -6,31 +10,37 @@ import Frog from "./classes/Frog"
 import InformationManager from "./classes/InformationManager"
 import Cactus from "./classes/Cactus"
 import Stone from "./classes/Stone"
-import BagStoneStack from "./classes/bagItems/BagStoneStack"
 import Vase from "./classes/Vase"
-// import StoneStack from "./classes/items/StoneStack"
 import Item from "./classes/items/Item"
 import Flame from "./classes/Flame"
 import BagOxygen from "./classes/bagItems/BagOxygen"
 import Bird from "./classes/Bird"
 import BirdProjectile from "./classes/BirdProjectile"
-import BagShield from "./classes/bagItems/BagShield"
 import BagHat from "./classes/bagItems/BagHat"
 import DeathAnim from "./classes/DeathAnim"
 import PickableStone from "./classes/PickableStone"
 import FragilePlatform from "./classes/FragilePlatform"
 import Grass from "./classes/Grass"
 
+
+const CONSTANTS = {
+    gameStarted: false,
+    tutorialShown: false,
+    loadingScreen: document.getElementById("start-screen") as HTMLDivElement,
+    hotkeysScreen: document.getElementById("hotkeys") as HTMLDivElement,
+}
+
 const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
 const playerStartPos = { x: 100, y: 100 }
 
-export const player = new Player(playerStartPos.x, playerStartPos.y)
 export const canvasProps = {
     width: window.innerWidth - 5,
     height: window.innerHeight - 250,
     rerenderStep: 20 // higher = better performance
 }
+
+export const player = new Player(playerStartPos.x, playerStartPos.y, canvasProps.width)
 export const informationManager = new InformationManager()
 
 export const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
@@ -68,7 +78,9 @@ brightSpriteSheet.src = "../img/spritesheet_bright.png"
 
 function loadSprite(sprite: HTMLImageElement) {
     return new Promise((resolve, reject) => {
+        if (sprite.complete) resolve(true)
         sprite.onload = () => {
+          
             resolve(true)
         }
     })
@@ -78,12 +90,14 @@ function loadSprite(sprite: HTMLImageElement) {
 async function startGame() {
     await loadSprite(spriteSheet)
     await loadSprite(brightSpriteSheet)
+    const isMobile = await applyMobile()
+    if (isMobile) CONSTANTS.hotkeysScreen.style.display = "none"
     // resize canvas
     app.canvas.width = app.canvasProps.width
     app.canvas.height = app.canvasProps.height - 6
 
     // play background music
-    // app.audioManager.play()
+    app.audioManager.play()
 
     // create player
     player.draw()
@@ -96,7 +110,8 @@ async function startGame() {
     // informationManager.resetItems()
 
     // ! DELETE THIS IS ONLY FOR TESTS
-    // new BagOxygen()
+    new BagOxygen()
+    new BagOxygen()
     // new BagHat()
    
     
@@ -171,7 +186,25 @@ function unbindPressedKeys(e: KeyboardEvent) {
 }
 
 
+if (!CONSTANTS.gameStarted) {
+    document.onkeydown = async (e) => {
+        if (e.key === " ") {
+            // console.log(e.key, e.key === " ")
+            CONSTANTS.gameStarted = true
+            CONSTANTS.loadingScreen.style.display = "none"
 
-startGame()
+            document.onkeydown = () => {
+                CONSTANTS.tutorialShown = false
+                CONSTANTS.hotkeysScreen.style.display = "none"
+            }
+            startGame()
+        }
+    }
+}
+
+
+
+
+
 
 

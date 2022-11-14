@@ -2,6 +2,7 @@
   margin: 0;
   /* padding: 0; */
   box-sizing: border-box;
+  user-select: none;
 }
 
 #container {
@@ -161,10 +162,117 @@
   /* background-color: yellow; */
 }
 
+#start-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+}
+
+#start-screen * {
+  color: white;
+  text-align: center;
+  padding: 50px;
+}
+
+#start-screen p {
+  font-size: 26px;
+}
+
+#game-name {
+  font-size: 50px;
+}
+
+#author {
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+}
+
+#hotkeys {
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: space-evenly;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #ffffff22;
+}
+
+#hotkeys p {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+#hotkeys img, #hotkeys p {
+  animation-name: hotkeysBlink;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+}
+
+#hotkeys img {
+  width: 50%;
+  object-fit: contain;
+}
+
+#hotkeys .group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-btn {
+  position: absolute;
+  background-color: #ffffffaa;
+  width: 10vw;
+  bottom: 20px;
+  z-index: 1000;
+  object-fit: contain;
+  opacity: 0.6;
+  aspect-ratio: 1/ 1;
+}
+
+
+
+#right-button {
+  transform: rotate(180deg);
+  left: 11vw;
+}
+
+#up-button {
+  transform: rotate(90deg);
+  right: 21vw;
+}
+
+#attack-button {
+  right: 32vw;
+}
+
+#change-weapon-button {
+  right: 10vw;
+}
+
+
 @keyframes playerBlink {
   0%, 100% {
     background-color: #fff;
   } 50% {
     background-color: blue;
   } 
+}
+
+@keyframes hotkeysBlink {
+  0%, 100% {
+    opacity: 1;
+  } 50% {
+    opacity: 0.6;
+  }
 }

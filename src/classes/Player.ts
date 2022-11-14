@@ -1,21 +1,22 @@
-import { isThisTypeNode, textChangeRangeIsUnchanged } from "../../node_modules/typescript/lib/typescript"
-import { app, pressedKeys, gameObjects, informationManager, renderer, spriteSheet, player, brightSpriteSheet } from "../main"
+import { classicNameResolver, isThisTypeNode, textChangeRangeIsUnchanged } from "../../node_modules/typescript/lib/typescript"
+import { app, pressedKeys, gameObjects, informationManager, renderer, spriteSheet, player, brightSpriteSheet, canvasProps } from "../main"
 import BagHat from "./bagItems/BagHat"
 import BagStoneStack from "./bagItems/BagStoneStack"
 import DeathAnim from "./DeathAnim"
 import Flame from "./Flame"
 import ImageMapper from "./ImageMapper"
 import Stone from "./Stone"
+import BagOxygen from "./items/Item"
 
 
 // CONSTANTS 
 const jumpHeight = 30
 const velocity = { x: 5, y: 1}
-let startPos = { x: 0, y: 0}
+const startPos = { x: 100, y: 100}
 const size = { w: 50, h: 90}
 const weaponChangeTimeout = 500
 const stoneDelayValue = 1000
-const viewBreakPoints = { min: 400, max: 800}
+let viewBreakPoints = { min: 400, max: 800}
 const maxAnimValue = {
     move: 24, jump: 10000
 }
@@ -60,9 +61,9 @@ class Player implements PlayerInterface {
 
 
     
-    constructor(x: number, y: number) {
-        startPos = { x, y}
-        this.position = { x, y}
+    constructor(x: number, y: number, canvasW: number) {
+        // startPos = { x, y}
+        this.position = {...startPos}
         this.velocity = velocity
         this.width = size.w
         this.height = size.h
@@ -76,6 +77,9 @@ class Player implements PlayerInterface {
         this.animProps = { moving: false, animJumpPhase: 0, animMovePhase: 0, previousDirection: "right"}
         this.alpha = { in: false, anim: 0}
         this.death = false
+        viewBreakPoints.max = canvasW - 300
+
+        
       
     }
 
@@ -104,6 +108,8 @@ class Player implements PlayerInterface {
             this.floating.isfloating = false
         }
         this.draw()
+
+        // console.log(viewBreakPoints)
     }
 
     captureMovement() {
@@ -263,20 +269,20 @@ class Player implements PlayerInterface {
         setTimeout(() => {
             // descrolling view
             const descrollValue = renderer.playerAbstractionPos.x - this.position.x
-            // console.log(descrollValue)
             for (let collidableObj of gameObjects.collidable) {
                 collidableObj.position.x += descrollValue
+            }
+
+            for (let nonCollidable of gameObjects.nonCollidable) {
+                nonCollidable.position.x += descrollValue
             }
             renderer.playerAbstractionPos.x = startPos.x
             
     
             // reseting stats
-            this.position.x = startPos.x
-            this.position.y = startPos.y
+            this.position = {...startPos}
             this.velocity.y = velocity.y
             this.floating.direction = ""
-    
-    
     
             // console.log(renderer.playerAbstractionPos.x, this.position.x) 
             informationManager.updateLives(informationManager.lives.value - 1)
@@ -336,8 +342,15 @@ class Player implements PlayerInterface {
                 if (this.flame.incrementer === flameConsumptionDelay) {
                     informationManager.updateOxygen(informationManager.oxygen.value - 1)
                     if (informationManager.oxygen.value === 0) {
-                        this.weaponChosen.type = "stones"
-                        this.flame.obj.remove()
+                        // this.weaponChosen.type = "stones"
+                        //@ts-ignore
+                        const oxygen = informationManager.bag.items.find((o) => o.class === "bag oxygen") as BagOxygen
+                        //@ts-ignore
+                        if (oxygen) oxygen.use()
+                        else {
+                            this.flame.obj.remove()
+                            this.weaponChosen.type = "stones"
+                        }
                     }
                     this.flame.incrementer = 0
                 }

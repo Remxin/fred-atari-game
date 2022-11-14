@@ -31,7 +31,7 @@ class Item {
     }
 
     draw() {
-        console.log(this.graphics.cords)
+        // console.log(this.graphics.cords)
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 

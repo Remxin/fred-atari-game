@@ -1,4 +1,4 @@
-import { player, app, spriteSheet, gameObjects } from "../main"
+import { player, app, spriteSheet, gameObjects, informationManager } from "../main"
 import ImageMapper from "./ImageMapper"
 
 const CONSTS = {
@@ -51,6 +51,7 @@ class Flame {
   
             if (this.position.x + this.width >= collidableObj.position.x && this.position.x <= collidableObj.position.x + collidableObj.width && this.position.y <= collidableObj.position.y + collidableObj.height && this.position.y + this.height >= collidableObj.position.y) {
                 collidableObj.remove()
+                informationManager.addScorePoints(50)
             }
         }
 
