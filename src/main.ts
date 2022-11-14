@@ -1,57 +1,140 @@
+// ____ FEATURES ____
+import { applyMobile } from "./features/applyMobile"
+
+// ____ CLASSES ____
 import Player from "./classes/Player"
 import Platform from "./classes/Platform"
-const canvas = document.getElementById("main") as HTMLCanvasElement
+import AudioManager from "./classes/AudioManager"
+import Renderer from "./classes/Renderer"
+import Frog from "./classes/Frog"
+import InformationManager from "./classes/InformationManager"
+import Cactus from "./classes/Cactus"
+import Stone from "./classes/Stone"
+import Vase from "./classes/Vase"
+import Item from "./classes/items/Item"
+import Flame from "./classes/Flame"
+import BagOxygen from "./classes/bagItems/BagOxygen"
+import Bird from "./classes/Bird"
+import BirdProjectile from "./classes/BirdProjectile"
+import BagHat from "./classes/bagItems/BagHat"
+import DeathAnim from "./classes/DeathAnim"
+import PickableStone from "./classes/PickableStone"
+import FragilePlatform from "./classes/FragilePlatform"
+import Grass from "./classes/Grass"
 
+
+const CONSTANTS = {
+    gameStarted: false,
+    tutorialShown: false,
+    loadingScreen: document.getElementById("start-screen") as HTMLDivElement,
+    hotkeysScreen: document.getElementById("hotkeys") as HTMLDivElement,
+}
+
+const canvas = document.getElementById("main") as HTMLCanvasElement
+const audioManager = new AudioManager()
+const playerStartPos = { x: 100, y: 100 }
+
+export const canvasProps = {
+    width: window.innerWidth - 5,
+    height: window.innerHeight - 250,
+    rerenderStep: 20 // higher = better performance
+}
+
+export const player = new Player(playerStartPos.x, playerStartPos.y, canvasProps.width)
+export const informationManager = new InformationManager()
+
+export const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
 export const app = {
     canvas,
     c: canvas.getContext("2d"),
-    canvasProps: {
-        width: window.innerWidth - 5,
-        height: window.innerHeight,
-        rerenderStep: 30 // higher = better performance
-    },
+    canvasProps,
     gravity: 2,
+    audioManager,
+    renderer,
+    informationManager,
+    player
 }
 
 export const pressedKeys = {
     up: false,
     down: false,
     left: false,
-    right: false
+    right: false,
+    f: false,
+    e: false
 }
 
 export const gameObjects = {
-    platforms: [] as Platform[]
+    collidable: [] as (Platform|Frog|Cactus|Bird|BirdProjectile|FragilePlatform)[],
+    playerFriendly: [] as (Stone|Flame)[],
+    nonCollidable: [] as (Vase | Item | DeathAnim | PickableStone|FragilePlatform|Grass)[]
+}
+
+export const spriteSheet = new Image()
+spriteSheet.src = "../img/spritesheet.png"
+
+export const brightSpriteSheet = new Image()
+brightSpriteSheet.src = "../img/spritesheet_bright.png"
+
+function loadSprite(sprite: HTMLImageElement) {
+    return new Promise((resolve, reject) => {
+        if (sprite.complete) resolve(true)
+        sprite.onload = () => {
+          
+            resolve(true)
+        }
+    })
 }
 
 
-function startGame() {
+async function startGame() {
+    await loadSprite(spriteSheet)
+    await loadSprite(brightSpriteSheet)
+    const isMobile = await applyMobile()
+    if (isMobile) CONSTANTS.hotkeysScreen.style.display = "none"
     // resize canvas
     app.canvas.width = app.canvasProps.width
     app.canvas.height = app.canvasProps.height - 6
 
+    // play background music
+    app.audioManager.play()
+
     // create player
-    const player = new Player()
-    const platform = new Platform(200, 950)
-
-    gameObjects.platforms.push(platform)
-
     player.draw()
+
+    // show bottom data
+    informationManager.addScorePoints(0)
+    informationManager.updateOxygen(0)
+    informationManager.updateStones(11)
+    informationManager.updateLives(5)
+    // informationManager.resetItems()
+
+    // ! DELETE THIS IS ONLY FOR TESTS
+    new BagOxygen()
+    new BagOxygen()
+    // new BagHat()
+   
     
     // animate game
     function startAnim() {
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
-        platform.draw()
+        app.c.fillStyle = "black"
+        app.c.fillRect(0, 0, canvasProps.width, canvasProps.height)
+        
+        
+        
+        // initialize renderer (it will automatically render new objects and delete unnecessary ones)
+        renderer.trackRendering()
+        renderer.updateGameObjects()
         player.update()
         
         
         setTimeout(() => {
             requestAnimationFrame(startAnim)
-            // console.log("render leci");
         }, app.canvasProps.rerenderStep)
     }
     startAnim()
-
+    
     // listen to keys pressed
     window.onkeydown = (e) => recognizePressedKeys(e)
     window.onkeyup = (e) => unbindPressedKeys(e)
@@ -69,6 +152,14 @@ function recognizePressedKeys(e: KeyboardEvent) {
     if (e.key === "ArrowUp" || e.key === "w") {
         pressedKeys.up = true
     }
+
+    if (e.key === "f") {
+        pressedKeys.f = true
+    }
+
+    if (e.key === "e") {
+        pressedKeys.e = true
+    }   
 }
 
 function unbindPressedKeys(e: KeyboardEvent) {
@@ -84,10 +175,36 @@ function unbindPressedKeys(e: KeyboardEvent) {
     if (e.key === "ArrowUp" || e.key === "w") {
         pressedKeys.up = false
     }
+
+    if (e.key === "f") {
+        pressedKeys.f = false
+    }
+
+    if (e.key === "e") {
+        pressedKeys.e = false
+    }   
+}
+
+
+if (!CONSTANTS.gameStarted) {
+    document.onkeydown = async (e) => {
+        if (e.key === " ") {
+            // console.log(e.key, e.key === " ")
+            CONSTANTS.gameStarted = true
+            CONSTANTS.loadingScreen.style.display = "none"
+
+            document.onkeydown = () => {
+                CONSTANTS.tutorialShown = false
+                CONSTANTS.hotkeysScreen.style.display = "none"
+            }
+            startGame()
+        }
+    }
 }
 
 
 
-startGame()
+
+
 
 

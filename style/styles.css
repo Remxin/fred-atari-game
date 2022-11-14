@@ -1,0 +1,278 @@
+* {
+  margin: 0;
+  /* padding: 0; */
+  box-sizing: border-box;
+  user-select: none;
+}
+
+#container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  flex-direction: column;
+}
+
+#main {
+  position: relative;
+  border: 1px solid black;
+}
+
+#informations {
+  padding: 10px;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  background-color: black;
+  width: 100%;
+  height: 250px;
+}
+
+.row {
+  position: relative;
+  display: flex;
+}
+
+#player-pos-index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 25px;
+}
+
+#progress-bar {
+  display: flex;
+  position: relative;
+  width: 70%;
+  height: 15px;
+  background-color: rgb(152, 20, 20);
+  overflow: hidden;
+}
+
+#progress-bar .checkpoint {
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  background-color: royalblue;
+}
+
+.start {
+  left: 0;
+}
+
+.end {
+  right: 0;
+}
+
+#player-on-map {
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  animation-name: playerBlink;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+
+}
+
+#run-score, #total-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+  height: 70px;
+  margin-right: 20px;
+}
+
+#run-score img, #total-score img {
+  width: 20%;
+  height: 50%;
+  object-fit: contain;
+  margin-right: 5px;
+}
+
+#game-over-timer {
+  width: 20%;
+}
+
+
+#oxygen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12%;
+  height: 150px;
+}
+
+#oxygen img {
+  height: 140px;
+}
+
+#bottle-fill {
+  position: absolute;
+  bottom: 14px;
+  width: 44px;
+  /* height: 85px; */
+  background-color: pink;
+}
+
+#stones {
+  width: 44%;
+  height: 70px;
+  padding-top: 8px;
+  padding-left: 10px;
+}
+
+#stones img {
+  position: relative;
+  /* width: 20%; */
+  height: 40%;
+  object-fit: contain;
+}
+
+#lives {
+  display: flex;
+  justify-content: flex-end;
+  width: 44%;
+  height: 70px;
+  padding-right: 20px;
+}
+
+#lives img {
+  height: 65px;
+  margin-left: 10px;
+}
+
+#bag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 12%;
+  top: 80px;
+  width: 88%;
+  height: 50px;
+}
+
+#bag img {
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+  /* object-fit: contain; */
+  /* background-color: yellow; */
+}
+
+#start-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+}
+
+#start-screen * {
+  color: white;
+  text-align: center;
+  padding: 50px;
+}
+
+#start-screen p {
+  font-size: 26px;
+}
+
+#game-name {
+  font-size: 50px;
+}
+
+#author {
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+}
+
+#hotkeys {
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: space-evenly;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #ffffff22;
+}
+
+#hotkeys p {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+#hotkeys img, #hotkeys p {
+  animation-name: hotkeysBlink;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+}
+
+#hotkeys img {
+  width: 50%;
+  object-fit: contain;
+}
+
+#hotkeys .group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-btn {
+  position: absolute;
+  background-color: #ffffffaa;
+  width: 10vw;
+  bottom: 20px;
+  z-index: 1000;
+  object-fit: contain;
+  opacity: 0.6;
+  aspect-ratio: 1/ 1;
+}
+
+
+
+#right-button {
+  transform: rotate(180deg);
+  left: 11vw;
+}
+
+#up-button {
+  transform: rotate(90deg);
+  right: 21vw;
+}
+
+#attack-button {
+  right: 32vw;
+}
+
+#change-weapon-button {
+  right: 10vw;
+}
+
+
+@keyframes playerBlink {
+  0%, 100% {
+    background-color: #fff;
+  } 50% {
+    background-color: blue;
+  } 
+}
+
+@keyframes hotkeysBlink {
+  0%, 100% {
+    opacity: 1;
+  } 50% {
+    opacity: 0.6;
+  }
+}
