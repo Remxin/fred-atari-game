@@ -1,5 +1,5 @@
 // ____ FEATURES ____
-import { applyMobile } from "./features/applyMobile"
+import { applyMobile, mobileCheck } from "./features/applyMobile"
 
 // ____ CLASSES ____
 import Player from "./classes/Player"
@@ -34,9 +34,13 @@ const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
 const playerStartPos = { x: 100, y: 100 }
 
+
+
 export const canvasProps = {
-    width: window.innerWidth - 5,
-    height: window.innerHeight - 250,
+    // height: window.innerWidth < 769 ? window.innerHeight * 1.4  : window.innerHeight - 250,
+    // width: window.innerWidth < 769 ? window.innerWidth * 2.4 : window.innerWidth,
+    height: window.innerWidth < 769 ? 640  : window.innerHeight - 250,
+    width: window.innerWidth < 769 ? 768 * 2.4 : window.innerWidth,
     rerenderStep: 20 // higher = better performance
 }
 
@@ -71,10 +75,10 @@ export const gameObjects = {
 }
 
 export const spriteSheet = new Image()
-spriteSheet.src = "../img/spritesheet.png"
+spriteSheet.src = "img/spritesheet.png"
 
 export const brightSpriteSheet = new Image()
-brightSpriteSheet.src = "../img/spritesheet_bright.png"
+brightSpriteSheet.src = "img/spritesheet_bright.png"
 
 function loadSprite(sprite: HTMLImageElement) {
     return new Promise((resolve, reject) => {
@@ -187,20 +191,55 @@ function unbindPressedKeys(e: KeyboardEvent) {
 
 
 if (!CONSTANTS.gameStarted) {
-    document.onkeydown = async (e) => {
-        if (e.key === " ") {
-            // console.log(e.key, e.key === " ")
-            CONSTANTS.gameStarted = true
-            CONSTANTS.loadingScreen.style.display = "none"
-
-            document.onkeydown = () => {
+    const isMobile = mobileCheck()
+    
+    if (!isMobile) {
+        const information = document.createElement("p")
+        information.innerText = "Press SPACEBAR to start game"
+        CONSTANTS.loadingScreen.appendChild(information)
+        
+        document.onkeydown = async (e) => {
+            if (e.key === " ") {
+                // console.log(e.key, e.key === " ")
+                CONSTANTS.gameStarted = true
+                CONSTANTS.loadingScreen.style.display = "none"
+    
+                document.onkeydown = () => {
+                    CONSTANTS.tutorialShown = false
+                    CONSTANTS.hotkeysScreen.style.display = "none"
+                }
+                startGame()
+            }
+        }
+        } else {
+            const information = document.createElement("button")
+            information.innerText = "Click here to start!"
+            information.classList.add("mobile-start-game")
+            information.onpointerdown = () => {
+                console.log('aaa')
+                CONSTANTS.gameStarted = true
+                CONSTANTS.loadingScreen.style.display = "none"
                 CONSTANTS.tutorialShown = false
                 CONSTANTS.hotkeysScreen.style.display = "none"
+                startGame()
             }
-            startGame()
+
+            information.onpointerenter = () => {
+                console.log('aaa');
+                
+            }
+
+            
+            console.log(information)
+            CONSTANTS.loadingScreen.appendChild(information)
         }
-    }
 }
+
+window.oncontextmenu = () => false
+document.oncontextmenu = () => false
+
+window.onpointerdown = () => false
+document.onpointerdown = () => false
 
 
 

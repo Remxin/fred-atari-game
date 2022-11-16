@@ -11,12 +11,14 @@ const playerContext = {
     currentRunPoints: 0,
     currentPoints: 0,
     bag: [] as BagItem[],
-    oxygen: { current: 0, max: 40, maxHeight: 85 }, // (height in px)
+    oxygen: { current: 0, max: 40, maxHeight: document.getElementById("oxygen-bottle").offsetHeight  }, // (height in px)
     lives: { current: 5, max: 8 },
     stones: { current: 9, max: 10 },
     scoreLen: 6,
 
 }
+
+console.log(document.getElementById("oxygen-bottle").offsetHeight)
 
 interface InformationManagerInterface {
     playerPosIndex: { div: HTMLDivElement, min: number, max: number}
@@ -54,7 +56,6 @@ class InformationManager implements InformationManagerInterface{
     }
 
     addScorePoints(updateQuantity: number) {
-        console.log(updateQuantity)
         this.runScore.value += updateQuantity
         this.totalScore.value += updateQuantity
 
@@ -63,7 +64,6 @@ class InformationManager implements InformationManagerInterface{
 
         const scoreStr = { run: this.runScore.value + "", total: this.totalScore.value + "" }
         const blankZeros = {run: playerContext.scoreLen - scoreStr.run.length, total: playerContext.scoreLen -  scoreStr.total.length }
-        console.log(this.runScore.value, this.totalScore.value)
 
         Object.values(blankZeros).forEach((blankZero, index) => {
             for (let i = 0; i < blankZero; i++) {
@@ -110,10 +110,9 @@ class InformationManager implements InformationManagerInterface{
         this.oxygen.value = newOxygenValue
         const fullPercentageFloat = Math.round((newOxygenValue / playerContext.oxygen.max) * 100) / 100
 
-        const height = Math.round(fullPercentageFloat * playerContext.oxygen.maxHeight)
-        this.oxygen.
         
-        div.style.height = height + "px"
+        const height = Math.round(fullPercentageFloat * playerContext.oxygen.maxHeight) - 0.1 * playerContext.oxygen.maxHeight
+        this.oxygen.div.style.height = height + "%"
     }
 
     updateStones(newStoneValue: number) {
@@ -134,7 +133,7 @@ class InformationManager implements InformationManagerInterface{
             
             const isEven = i % 2 === 0
             if (isEven) {
-                img.style.top = "30px"
+                img.style.top = "40%"
             } 
             this.stones.div.appendChild(img)
         }
@@ -185,7 +184,6 @@ class InformationManager implements InformationManagerInterface{
     addItem(item: BagStoneStack | BagOxygen | BagHat | BagShield) {
         this.bag.items.push(item)
         this.showItems()
-        // console.log(this.bag.items)
     }
 
     deleteItem (deletedItem: BagItem) {

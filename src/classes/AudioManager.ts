@@ -2,7 +2,7 @@ interface AudioManagerInterface  {
     backgroundMusic: HTMLAudioElement
 }
 class AudioManager implements AudioManagerInterface{
-    backgroundMusic: HTMLAudioElement = new Audio("../../audio/soundtrack.mp3")
+    backgroundMusic: HTMLAudioElement = new Audio("audio/soundtrack.mp3")
     
     play() {
         this.backgroundMusic.loop = true
