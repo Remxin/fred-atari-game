@@ -1,4 +1,4 @@
-import { app, canvasProps, spriteSheet } from "../main"
+import { app, canvasProps, spriteSheet, renderer } from "../main"
 import UUID from "../helpers/uuid"
 import ImageMapper from "./ImageMapper"
 import SizeMapper from "./SizeMapper"
@@ -28,14 +28,14 @@ class Platform implements PlatformInterface {
 
     constructor(x: number, y:number, type: platformType, length: platformLenght, turnDirection: plarformTurnDirection) {
         this.id = UUID.genId()
-        this.position = {
-            x,
-            y: canvasProps.height - y
-        }
-
+        
         const size = SizeMapper.getPlatformSize(type, length)
         this.width = size.width
         this.height = size.height
+        this.position = {
+            x,
+            y: canvasProps.height - y - this.height
+        }
 
         this.type = "platform"
         this.class = "platform"

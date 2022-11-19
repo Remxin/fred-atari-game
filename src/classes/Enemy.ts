@@ -1,6 +1,7 @@
 import { app, canvasProps, renderer, gameObjects, informationManager } from "../main"
 import UUID from "../helpers/uuid"
 import DeathAnim from "./DeathAnim"
+import Renderer from "./Renderer"
 
 abstract class Enemy {
     id: String
@@ -8,10 +9,11 @@ abstract class Enemy {
     width: number
     height: number
     deleted: boolean
+    renderer: Renderer
 
     constructor(x: number, y: number) {
-        // console.log();
         this.position = { x, y: canvasProps.height - y }
+        this.renderer = renderer
         this.id = UUID.genId()
         this.deleted = false
     }

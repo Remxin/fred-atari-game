@@ -1,3 +1,4 @@
+import { nodeModuleNameResolver } from "../../node_modules/typescript/lib/typescript"
 import { player, app, gameObjects, informationManager, spriteSheet } from "../main"
 import ImageMapper from "./ImageMapper"
 
@@ -65,7 +66,7 @@ class Stone {
         }
 
         for (let gameObj of gameObjects.collidable) {
-            if (this.position.x + this.width + Math.round(this.velocity.x/2)>= gameObj.position.x && this.position.x <= gameObj.position.x + gameObj.width && this.position.y >= gameObj.position.y && this.position.y + this.width <= gameObj.position.y + gameObj.height) {
+            if (this.position.x + this.width >= gameObj.position.x && this.position.x <= gameObj.position.x + gameObj.width && this.position.y + this.height >= gameObj.position.y && this.position.y  <= gameObj.position.y + gameObj.height) {
                 this.remove()
                 player.stoneThrown = false
 
@@ -77,9 +78,8 @@ class Stone {
         }
 
         for (let nonCollidable of gameObjects.nonCollidable) {
-            if (nonCollidable.type !== "vase") return
-
-            if (this.position.x + this.width + Math.round(this.velocity.x/2)>= nonCollidable.position.x && this.position.x <= nonCollidable.position.x + nonCollidable.width && this.position.y >= nonCollidable.position.y && this.position.y + this.width <= nonCollidable.position.y + nonCollidable.height) {
+            if (nonCollidable.type !== "vase") continue
+            if (this.position.x + this.width >= nonCollidable.position.x && this.position.x <= nonCollidable.position.x + nonCollidable.width && this.position.y + this.height >= nonCollidable.position.y && this.position.y  <= nonCollidable.position.y + nonCollidable.height) {
                 this.remove()
                 player.stoneThrown = false
                 nonCollidable.remove()

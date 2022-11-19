@@ -15,8 +15,8 @@ class Grass {
 
     constructor(x: number, y: number, size: "s" | "m" | "l", hanging: boolean) {
         this.id = UUID.genId()
-        this.position = { x, y: canvasProps.height - y }
         const sizeA = SizeMapper.getGrassSize(size, hanging)
+        this.position = { x, y: canvasProps.height - y - sizeA.height }
         this.height = sizeA.height
         this.width = sizeA.width
         this.graphics = { cords: ImageMapper.getGrassImageCords(size, hanging)}

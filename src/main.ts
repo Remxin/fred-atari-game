@@ -46,8 +46,8 @@ export const canvasProps = {
 
 export const player = new Player(playerStartPos.x, playerStartPos.y, canvasProps.width)
 export const informationManager = new InformationManager()
-
 export const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
+
 export const app = {
     canvas,
     c: canvas.getContext("2d"),
@@ -190,56 +190,62 @@ function unbindPressedKeys(e: KeyboardEvent) {
 }
 
 
-if (!CONSTANTS.gameStarted) {
-    const isMobile = mobileCheck()
+// if (!CONSTANTS.gameStarted) {
+//     const isMobile = mobileCheck()
     
-    if (!isMobile) {
-        const information = document.createElement("p")
-        information.innerText = "Press SPACEBAR to start game"
-        CONSTANTS.loadingScreen.appendChild(information)
+//     if (!isMobile) {
+//         const information = document.createElement("p")
+//         information.innerText = "Press SPACEBAR to start game"
+//         CONSTANTS.loadingScreen.appendChild(information)
         
-        document.onkeydown = async (e) => {
-            if (e.key === " ") {
-                // console.log(e.key, e.key === " ")
-                CONSTANTS.gameStarted = true
-                CONSTANTS.loadingScreen.style.display = "none"
+//         document.onkeydown = async (e) => {
+//             if (e.key === " ") {
+//                 // console.log(e.key, e.key === " ")
+//                 CONSTANTS.gameStarted = true
+//                 CONSTANTS.loadingScreen.style.display = "none"
     
-                document.onkeydown = () => {
-                    CONSTANTS.tutorialShown = false
-                    CONSTANTS.hotkeysScreen.style.display = "none"
-                }
-                startGame()
-            }
-        }
-        } else {
-            const information = document.createElement("button")
-            information.innerText = "Click here to start!"
-            information.classList.add("mobile-start-game")
-            information.onpointerdown = () => {
-                console.log('aaa')
-                CONSTANTS.gameStarted = true
-                CONSTANTS.loadingScreen.style.display = "none"
-                CONSTANTS.tutorialShown = false
-                CONSTANTS.hotkeysScreen.style.display = "none"
-                startGame()
-            }
+//                 document.onkeydown = () => {
+//                     CONSTANTS.tutorialShown = false
+//                     CONSTANTS.hotkeysScreen.style.display = "none"
+//                 }
+//                 startGame()
+//             }
+//         }
+//         } else {
+//             const information = document.createElement("button")
+//             information.innerText = "Click here to start!"
+//             information.classList.add("mobile-start-game")
+//             information.onpointerdown = () => {
+//                 console.log('aaa')
+//                 CONSTANTS.gameStarted = true
+//                 CONSTANTS.loadingScreen.style.display = "none"
+//                 CONSTANTS.tutorialShown = false
+//                 CONSTANTS.hotkeysScreen.style.display = "none"
+//                 startGame()
+//             }
 
-            information.onpointerenter = () => {
-                console.log('aaa');
+//             information.onpointerenter = () => {
+//                 console.log('aaa');
                 
-            }
+//             }
 
             
-            console.log(information)
-            CONSTANTS.loadingScreen.appendChild(information)
-        }
-}
+//             console.log(information)
+//             CONSTANTS.loadingScreen.appendChild(information)
+//         }
+// }
 
-window.oncontextmenu = () => false
-document.oncontextmenu = () => false
 
-window.onpointerdown = () => false
-document.onpointerdown = () => false
+// TODO: hash this and unhash next
+CONSTANTS.loadingScreen.style.display = "none"
+CONSTANTS.hotkeysScreen.style.display = "none"
+startGame()
+
+// window.oncontextmenu = () => false
+// document.oncontextmenu = () => false
+
+// window.onpointerdown = () => false
+// document.onpointerdown = () => false
 
 
 

@@ -236,10 +236,7 @@ class Player implements PlayerInterface {
                 }
                 // this.position.y = platform.height + platform.position.y - this.height
             } 
-            // bottom collision 
-            
-            
-            
+            // bottom collision // !BUG
             if (this.position.y + this.velocity.y < gameObj.position.y + gameObj.height && this.position.y + this.height > gameObj.position.y && this.position.x + this.width > gameObj.position.x && this.position.x < gameObj.position.x + gameObj.width) {
                 if (gameObj.type === "platform") {
                     this.position.y = gameObj.position.y + gameObj.height
@@ -276,12 +273,13 @@ class Player implements PlayerInterface {
             for (let nonCollidable of gameObjects.nonCollidable) {
                 nonCollidable.position.x += descrollValue
             }
-            renderer.playerAbstractionPos.x = startPos.x
+            renderer.playerAbstractionPos = {...startPos}
             
     
             // reseting stats
             this.position = {...startPos}
             this.velocity.y = velocity.y
+            this.floating.isfloating = true
             this.floating.direction = ""
     
             // console.log(renderer.playerAbstractionPos.x, this.position.x) 
@@ -402,10 +400,11 @@ class Player implements PlayerInterface {
     collisionChk(direction: "left" | "right") {
         if (direction === "right") {
             for (let gameObj of gameObjects.collidable) {
-                if (gameObj.type === "platform") { // ! BUG
+                if (gameObj.type === "platform") { 
                     if (this.position.x < gameObj.position.x + gameObj.width && this.position.x + this.width >= gameObj.position.x && this.position.y < gameObj.position.y + gameObj.height  && this.position.y + this.height > gameObj.position.y) {
-                        return true
+                        console.log('right')
                         // this.position.x = gameObj.position.x - this.width               
+                        return true
                 
                         // break
                     }
@@ -415,8 +414,9 @@ class Player implements PlayerInterface {
             }
         } else {
             for (let gameObj of gameObjects.collidable) {
-                if (gameObj.type === 'platform') { // ! BUG 
+                if (gameObj.type === 'platform') { 
                     if (this.position.x <= gameObj.position.x + gameObj.width && this.position.x + this.width > gameObj.position.x && this.position.y < gameObj.position.y + gameObj.height  && this.position.y + this.height > gameObj.position.y) {
+                        console.log('left')
                         return true
                         
                     } 

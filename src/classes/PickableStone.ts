@@ -1,10 +1,10 @@
 import UUID from "../helpers/uuid"
-import { app, spriteSheet, informationManager, player, gameObjects, canvasProps } from "../main"
+import { app, spriteSheet, informationManager, player, gameObjects, canvasProps, renderer } from "../main"
 import ImageMapper from "./ImageMapper"
 
 
 const CONSTANTS = {
-    size: 25
+    size: 30
 }
 
 
@@ -19,10 +19,9 @@ class PickableStone {
     constructor(x: number, y: number) {
         this.id = UUID.genId()
         this.type = "pickable stone"
-        console.log(app)
-        this.position = { x, y: canvasProps.height - y}
         this.width = CONSTANTS.size
         this.height = CONSTANTS.size
+        this.position = { x, y: canvasProps.height - y - this.height - 5}
         this.graphics = { cords: ImageMapper.getGameStoneImageCords()}
     }
 
@@ -46,6 +45,9 @@ class PickableStone {
     remove() {
         const myGameIndex = gameObjects.nonCollidable.findIndex(e => e.id === this.id)
         gameObjects.nonCollidable.splice(myGameIndex, 1)
+
+        const myRendererIndex = renderer.breakPoints[renderer.currentBreakPoint].neutral.findIndex(e => e.id === this.id)
+        if (myRendererIndex !== -1) renderer.breakPoints[renderer.currentBreakPoint].neutral.splice(myRendererIndex, 1)
     }
 }
 

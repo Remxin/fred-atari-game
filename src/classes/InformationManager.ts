@@ -18,7 +18,6 @@ const playerContext = {
 
 }
 
-console.log(document.getElementById("oxygen-bottle").offsetHeight)
 
 interface InformationManagerInterface {
     playerPosIndex: { div: HTMLDivElement, min: number, max: number}

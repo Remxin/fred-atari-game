@@ -1,9 +1,10 @@
 import Enemy from "./Enemy";
 import ImageMapper from "./ImageMapper";
 import { app, spriteSheet} from "../main"
+import Renderer from "./Renderer";
 
 const CONSTANTS = {
-    fragmentHeight: 40
+    fragmentHeight: 60
 }
 
 export type sizeType = "sm" | "s"| "m" | "l" | "lg"
@@ -33,16 +34,17 @@ class Cactus extends Enemy implements CactusInterface {
 
     constructor(x: number, y: number, size: sizeType, direction: directionType) {
         super(x, y)
+        this.size = size
+        this.assignSize()
         this.type = "enemy"
         this.class = "cactus"
+        this.position.y -= this.height
         this.direction = direction
-        this.size = size
         this.graphics = { cords: ImageMapper.getCactusImageCords(this.size, this.direction)}
-        this.assignSize()
     }
 
     assignSize() {
-        this.width = CONSTANTS.fragmentHeight
+        this.width = CONSTANTS.fragmentHeight - 10
         
         switch(this.size) {
             case "sm": 
@@ -58,10 +60,12 @@ class Cactus extends Enemy implements CactusInterface {
                 this.height = CONSTANTS.fragmentHeight * 4
                 break
         }
-
+        // console.log(this.height, this.width)
+        
     }
-
+    
     draw() {
+        
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 

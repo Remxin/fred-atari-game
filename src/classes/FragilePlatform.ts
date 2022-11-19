@@ -1,9 +1,9 @@
 import UUID from "../helpers/uuid"
-import { app, gameObjects, spriteSheet } from "../main"
+import { app, canvasProps, gameObjects, spriteSheet } from "../main"
 import ImageMapper from "./ImageMapper"
 
 const CONSTANTS = {
-    pW: 60,
+    pW: 70,
     pH: 60,
     brokeLevel: 30
 }
@@ -20,9 +20,10 @@ class FragilePlatform {
 
     constructor(x: number, y: number) {
         this.id = UUID.genId()
-        this.position = { x, y}
         this.width = CONSTANTS.pW
         this.height = CONSTANTS.pH
+        console.log(this.height)
+        this.position = { x, y: canvasProps.height - y - this.height}
         this.type = "platform"
         this.class ="fragile platform"
         this.broken = { level: CONSTANTS.brokeLevel, is: false}

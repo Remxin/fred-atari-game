@@ -1,5 +1,5 @@
 import Enemy from "./Enemy";
-import { app, spriteSheet } from "../main";
+import { app, gameObjects, spriteSheet } from "../main";
 import ImageMapper from "./ImageMapper";
 
 const CONSTANTS = {
@@ -43,6 +43,7 @@ class Frog extends Enemy implements FrogInterface{
         super(x, y)
         this.width = 45
         this.height = 45
+        this.position.x -= this.height
         this.type = "enemy"
         this.class = "frog"
         this.velocity = CONSTANTS.velocity
@@ -57,6 +58,7 @@ class Frog extends Enemy implements FrogInterface{
     }
 
     update() {
+      // console.log(this.stayTimeout, this.abstractPos.x)
          if (this.position.y + this.height + this.velocity.y <= app.canvas.height) {
             this.position.y += this.velocity.y
             this.velocity.y += app.gravity
@@ -67,10 +69,9 @@ class Frog extends Enemy implements FrogInterface{
             this.isFloating = false
          }
 
-         
+         this.checkCollision()
          // force frog to move right
          if (this.abstractPos.x <= this.movementRange.min && this.stayTimeout === 0) {
-            // console.log('right')
             this.movingRight = true
             this.isMoving = false
             this.stayTimeout = CONSTANTS.stayTimeout
@@ -103,7 +104,7 @@ class Frog extends Enemy implements FrogInterface{
 
         // kill player on collision
         const player = app.player
-        if (this.position.x <= player.position.x + player.width && this.position.x + this.width >= player.position.x && this.position.y >= player.position.x && this.position.y + this.height<= player.position.y + player.height) {
+        if (this.position.x <= player.position.x + player.width && this.position.x + this.width >= player.position.x && this.position.y <= player.position.y + player.height && this.position.y + this.height >= player.position.y) {
             player.die()
         }
 
@@ -123,6 +124,22 @@ class Frog extends Enemy implements FrogInterface{
         this.graphics = { cords: ImageMapper.getFrogImageCords(!this.movingRight, this.isMoving, this.anim.phase)}
       //   app.c.fillRect(this.position.x ,this.position.y, this.width, this.height)
       app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
+    }
+
+    checkCollision() {
+      for (let gameObj of gameObjects.collidable) {
+         if (gameObj.type !== "platform") continue
+         if (this.position.y + this.height >= gameObj.position.y && this.position.y <= gameObj.position.y + gameObj.height&& this.position.x + this.width >= gameObj.position.x && this.position.x <= gameObj.position.x + gameObj.width) {
+            this.velocity.y = 0
+            this.position.y = gameObj.position.y - this.height
+        } 
+
+   //      if (this.position.x < gameObj.position.x + gameObj.width && this.position.x + this.width > gameObj.position.x && this.position.y <= gameObj.position.y + gameObj.height  && this.position.y + this.height >= gameObj.position.y) {
+   //       this.position.x = gameObj.position.x - this.width               
+ 
+   //       break
+   //   }
+      }
     }
 
 }

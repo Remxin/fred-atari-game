@@ -21,10 +21,10 @@ class Vase {
 
     constructor(x: number ,y: number) {
         this.id = UUID.genId()
-        this.position = { x, y: canvasProps.height - y }
         this.graphics = {cords: ImageMapper.getVaseCords()}
         this.width = 50
         this.height = 50
+        this.position = { x, y: canvasProps.height - y - this.height - 10 }
         this.getRandomItem()
         this.type = "vase"
     }
@@ -55,7 +55,7 @@ class Vase {
     
     private replaceWithItem() {
         if (this.itemInside === "cactus") {
-            let cactus = new Cactus(this.position.x, app.canvasProps.height - this.position.y, "s", "")
+            let cactus = new Cactus(this.position.x, app.canvasProps.height - this.position.y - this.height - 10, "s", "")
             gameObjects.collidable.push(cactus)
 
 
