@@ -65,7 +65,8 @@ class Cactus extends Enemy implements CactusInterface {
     }
     
     draw() {
-        
+        // app.c.fillStyle = "green"
+        // app.c.fillRect(this.position.x, this.position.y, this.width, this.height)
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 

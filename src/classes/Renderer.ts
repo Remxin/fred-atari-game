@@ -11,7 +11,7 @@ import FragilePlatform from "./FragilePlatform"
 import Grass from "./Grass"
 
 let first = true // !DELETE this is only for test purposes
-const value = 3200
+const value = 4000
 
 type breakPointType = {
     abstractionPos: { min: number, max: number }
@@ -66,9 +66,9 @@ class Renderer implements RendererInterface {
                 abstractionPos: { min: -100, max: 200000}, // !FOR TESTS
                 // abstractionPos: {min: 500, max: 200000},
                 reached: false,
-                platforms: [new Platform(1500, 120, "b", "m", "left"), new Platform(1640, 120, "b", 'l', "left"), new Platform(2000, 80, "b", "s", "left"), new FragilePlatform(2105, 80), new Platform(2175, 80, "b", "s", "right"), new Platform(2300, 240, "b", "m", "left"), new FragilePlatform(2450, 240), new Platform(2520, 240, "b", "s", "right"), new Platform(2710, 240, "b", "l", "left"), new Platform(2910, 240, "b", "m", "right"), new Platform(3150, 120, "b", "l", "left"), new Platform(3500, 10, 'b', "s", "right"), new Platform(3475, 65, "a", "m", "left"), new Platform(3500, 105, "b", "s", "left"), new Platform(3500, 165, "b", "s", "right"), new Platform(3465, 220, "a", "m", "left"), new Platform(4050, 50, "b", "s", "right")],
+                platforms: [new Platform(1500, 120, "b", "m", "left"), new Platform(1640, 120, "b", 'l', "left"), new Platform(2000, 80, "b", "s", "left"), new FragilePlatform(2105, 80), new Platform(2175, 80, "b", "s", "right"), new Platform(2300, 240, "b", "m", "left"), new FragilePlatform(2450, 240), new Platform(2520, 240, "b", "s", "right"), new Platform(2710, 240, "b", "l", "left"), new Platform(2910, 240, "b", "m", "right"), new Platform(3150, 120, "b", "l", "left"), new Platform(3500, 10, 'b', "s", "right"), new Platform(3475, 65, "a", "m", "left"), new Platform(3500, 105, "b", "s", "left"), new Platform(3500, 165, "b", "s", "right"), new Platform(3465, 220, "a", "m", "left"), new Platform(4050, 50, "b", "s", "right"), new Platform(4250, 200, "a", "m", "left"), new Platform(4350, 250, "a", "s", "left")],
                 // platforms: [],
-                enemies: [new Frog(1850, 225, -250, 0), new Frog(1700, 0, 0, 300), new Cactus(2620, -10, "m", ""), new Cactus(2660, 70, "m", "left"), new Frog(2410, 0, 0, 200), new Frog(2310, 0, 0, 200), new Frog(2750, 0, 0, 300), new Frog(2800, 300, 0, 250), new Cactus(3100, 0, "l", ""), new Cactus(3370, 0, "m", ""), new Cactus(3410, 50, "s", "left"), new Cactus(3750, 0, "sm", ""), new Frog(3900, 0, 0, 100), new Cactus(4000, -35, "s", "")],
+                enemies: [new Frog(1850, 225, -250, 0), new Frog(1700, 0, 0, 300), new Cactus(2620, -10, "m", ""), new Cactus(2660, 70, "m", "left"), new Frog(2410, 0, 0, 200), new Frog(2310, 0, 0, 200), new Frog(2750, 0, 0, 300), new Frog(2800, 300, 0, 250), new Cactus(3100, 0, "l", ""), new Cactus(3370, 0, "m", ""), new Cactus(3410, 50, "s", "left"), new Cactus(3750, 0, "sm", ""), new Frog(3900, 0, 0, 100), new Cactus(4000, -35, "s", ""), new Cactus(4150, 0, "s", "right"), new Cactus(4190, -30, "m", ""), new Bird(3700, 400, 0, 400, false)],
                 neutral: [new Vase(1750, 170), new PickableStone(2150, 0), new PickableStone(3000, 295), new PickableStone(3610, 95), new Vase(3610, 0)],
                 decorations: [new Grass(1700, 180, "s", false), new Grass(1800, 95, "s", true), new Grass(2200, 140, "l", false), new Grass(3800, 0, "m", false)]
             
@@ -187,13 +187,15 @@ class Renderer implements RendererInterface {
     }
 
     checkEnemyCollisions() {
-        for (let gameObj of gameObjects.collidable) {
-            if (gameObj.type === "enemy") {
-                if (player.position.x + player.width >= gameObj.position.x && player.position.x <= gameObj.position.x + gameObj.width && player.position.y <= gameObj.position.y + gameObj.height && player.position.y + player.height >= gameObj.position.y) {
-                    player.die()
-                }
-            }
-        }
+        // for (let gameObj of gameObjects.collidable) {
+        //     if (gameObj.type === "enemy") {
+        //         if (player.position.x + player.width >= gameObj.position.x && player.position.x <= gameObj.position.x + gameObj.width && player.position.y <= gameObj.position.y + gameObj.height && player.position.y + player.height >= gameObj.position.y) {
+        //             console.log('die');
+                    
+        //             player.die()
+        //         }
+        //     }
+        // }
     }
 }
 

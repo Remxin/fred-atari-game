@@ -116,7 +116,7 @@ async function startGame() {
     // ! DELETE THIS IS ONLY FOR TESTS
     new BagOxygen()
     new BagOxygen()
-    // new BagHat()
+    new BagHat()
    
     
     // animate game

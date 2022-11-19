@@ -232,6 +232,7 @@ class Player implements PlayerInterface {
                         gameObj.break()
                     }
                 } else if (gameObj.type === "enemy") {
+                    
                     player.die()
                 }
                 // this.position.y = platform.height + platform.position.y - this.height
@@ -242,6 +243,7 @@ class Player implements PlayerInterface {
                     this.position.y = gameObj.position.y + gameObj.height
                     this.velocity.y = 1
                 } else if (gameObj.type === "enemy") {
+                    
                     this.die()
                 }
             }
