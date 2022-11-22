@@ -38,10 +38,10 @@ const playerStartPos = { x: 100, y: 100 }
 
 
 export const canvasProps = {
-    height: window.innerWidth < 769 ? window.innerHeight * 1.4 : window.innerHeight - 250,
-    width: window.innerWidth < 769 ? window.innerWidth * 2.4 : window.innerWidth,
-    // height: window.innerWidth < 769 ? 640 : window.innerHeight - 250,
-    // width: window.innerWidth < 769 ? 768 * 2.4 : window.innerWidth,
+    // height: window.innerWidth < 769 ? window.innerHeight * 1.4 : window.innerHeight - 250,
+    // width: window.innerWidth < 769 ? window.innerWidth * 2.4 : window.innerWidth,
+    height: 640,
+    width: 768,
     // height: 768,
     // width: 768,
     rerenderStep: 20 // higher = better performance
