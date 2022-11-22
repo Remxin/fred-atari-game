@@ -54,7 +54,9 @@ class FragilePlatform {
         // delete from collidable and add to non collidable
         const myIndex = gameObjects.collidable.findIndex(i => i.id === this.id)
         gameObjects.collidable.splice(myIndex, 1)
-        gameObjects.nonCollidable.push(this)
+
+        const nonCollidableIndex = gameObjects.nonCollidable.findIndex((o) => o.id === this.id)
+        if (nonCollidableIndex === -1) gameObjects.nonCollidable.push(this)
     }
 
     track() {
