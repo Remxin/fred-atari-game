@@ -19,8 +19,6 @@ class BagHat extends BagItem {
         this.fadeOut = false
         informationManager.addItem(this)
         this.img = informationManager.bag.itemsImgs.find((i) => i.alt === this.class)
-
-        console.log(this.img)
     }
 
     use() {

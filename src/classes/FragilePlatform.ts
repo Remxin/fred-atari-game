@@ -1,5 +1,5 @@
 import UUID from "../helpers/uuid"
-import { app, canvasProps, gameObjects, spriteSheet } from "../main"
+import { app, canvasProps, gameObjects, spriteSheet, trackableObjects } from "../main"
 import ImageMapper from "./ImageMapper"
 
 const CONSTANTS = {
@@ -13,24 +13,36 @@ class FragilePlatform {
     height: number
     width: number
     position: { x: number, y: number }
-    graphics: { cords: {x: number, y: number, width: number, height: number}} 
+    startPos: { x: number, y: number }
+    graphics: { cords: { x: number, y: number, width: number, height: number } }
     class: "fragile platform"
     type: "platform"
-    broken: { level: number, is: boolean}
+    broken: { level: number, is: boolean }
+    visible: boolean
 
     constructor(x: number, y: number) {
         this.id = UUID.genId()
         this.width = CONSTANTS.pW
         this.height = CONSTANTS.pH
-        console.log(this.height)
-        this.position = { x, y: canvasProps.height - y - this.height}
+        this.position = { x, y: canvasProps.height - y - this.height }
+        this.startPos = { ...this.position }
         this.type = "platform"
-        this.class ="fragile platform"
-        this.broken = { level: CONSTANTS.brokeLevel, is: false}
-        this.graphics = { cords: ImageMapper.getFragilePlatformImage(this.broken.is)}
+        this.class = "fragile platform"
+        this.broken = { level: CONSTANTS.brokeLevel, is: false }
+        this.graphics = { cords: ImageMapper.getFragilePlatformImage(this.broken.is) }
+        this.visible = true
     }
 
     draw() {
+        if (this.position.x + this.width <= 0 || this.position.x >= canvasProps.width) {
+            if (this.visible) {
+                this.visible = false
+                this.track()
+            }
+
+            return
+        }
+
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
@@ -43,6 +55,18 @@ class FragilePlatform {
         const myIndex = gameObjects.collidable.findIndex(i => i.id === this.id)
         gameObjects.collidable.splice(myIndex, 1)
         gameObjects.nonCollidable.push(this)
+    }
+
+    track() {
+        const myIndex = gameObjects.collidable.findIndex(p => p.id === this.id)
+        gameObjects.collidable.splice(myIndex, 1)
+        trackableObjects.push(this)
+    }
+
+    untrack() {
+        gameObjects.collidable.push(this)
+        const trackableIndex = trackableObjects.findIndex(p => p.id === this.id)
+        trackableObjects.splice(trackableIndex, 1)
     }
 
 }

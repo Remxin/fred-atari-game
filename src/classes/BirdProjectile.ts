@@ -9,19 +9,21 @@ const CONSTANTS = {
 }
 
 class BirdProjectile extends Enemy {
-    graphics: { cords: { x: number, y: number, height: number, width: number}}
+    graphics: { cords: { x: number, y: number, height: number, width: number } }
+    startPos: { x: number, y: number }
     velocity: { y: number }
     class: "bird projectile"
     type: "enemy"
     constructor(x: number, y: number) {
         super(x, y)
-        this.position = { x, y}
+        this.position = { x, y }
+        this.startPos = { ...this.position }
         this.width = CONSTANTS.width
         this.height = CONSTANTS.height
         this.class = "bird projectile"
         this.type = "enemy"
         this.velocity = CONSTANTS.startVelocity
-        this.graphics = { cords: ImageMapper.getBirdProjectileImageCords()}
+        this.graphics = { cords: ImageMapper.getBirdProjectileImageCords() }
     }
 
     update() {

@@ -7,25 +7,27 @@ const CONSTANTS = {
     removeStep: 30
 }
 
-class DeathAnim  {
+class DeathAnim {
     id: string
     type: "player" | "enemy"
     position: { x: number, y: number }
+    startPos: { x: number, y: number }
     width: number
     height: number
-    graphics: { cords: { x:number, y: number, width: number, height: number}}
-    anim: { phase: number, incrementer: number}
-    
+    graphics: { cords: { x: number, y: number, width: number, height: number } }
+    anim: { phase: number, incrementer: number }
+
     constructor(x: number, y: number, type: "player" | "enemy") {
         this.id = UUID.genId()
-        this.position = { x, y}
+        this.position = { x, y }
+        this.startPos = { ...this.position }
         this.type = type
-        this.anim = { phase: 0, incrementer: 0}
+        this.anim = { phase: 0, incrementer: 0 }
         this.assignSize()
         // this.addToScene()
-        
+
     }
-    
+
     assignSize() {
         this.width = 50
         if (this.type === "player") {
@@ -34,14 +36,14 @@ class DeathAnim  {
             this.height = 50
         }
     }
-    
+
     // addToScene() {
     //     // gameObjects.nonCollidable.push(this)
     //     console.log(gameObjects)
     // }
-    
+
     draw() {
-        this.graphics = { cords: ImageMapper.getDeathAnimImageCords(this.type, this.anim.phase)}
+        this.graphics = { cords: ImageMapper.getDeathAnimImageCords(this.type, this.anim.phase) }
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
         this.anim.incrementer += 1
         if (this.anim.incrementer >= CONSTANTS.animStep) {

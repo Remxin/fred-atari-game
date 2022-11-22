@@ -21,6 +21,7 @@ import DeathAnim from "./classes/DeathAnim"
 import PickableStone from "./classes/PickableStone"
 import FragilePlatform from "./classes/FragilePlatform"
 import Grass from "./classes/Grass"
+import Enemy from "./classes/Enemy"
 
 
 const CONSTANTS = {
@@ -37,10 +38,12 @@ const playerStartPos = { x: 100, y: 100 }
 
 
 export const canvasProps = {
-    // height: window.innerWidth < 769 ? window.innerHeight * 1.4  : window.innerHeight - 250,
-    // width: window.innerWidth < 769 ? window.innerWidth * 2.4 : window.innerWidth,
-    height: window.innerWidth < 769 ? 640  : window.innerHeight - 250,
-    width: window.innerWidth < 769 ? 768 * 2.4 : window.innerWidth,
+    height: window.innerWidth < 769 ? window.innerHeight * 1.4 : window.innerHeight - 250,
+    width: window.innerWidth < 769 ? window.innerWidth * 2.4 : window.innerWidth,
+    // height: window.innerWidth < 769 ? 640 : window.innerHeight - 250,
+    // width: window.innerWidth < 769 ? 768 * 2.4 : window.innerWidth,
+    // height: 768,
+    // width: 768,
     rerenderStep: 20 // higher = better performance
 }
 
@@ -69,10 +72,12 @@ export const pressedKeys = {
 }
 
 export const gameObjects = {
-    collidable: [] as (Platform|Frog|Cactus|Bird|BirdProjectile|FragilePlatform)[],
-    playerFriendly: [] as (Stone|Flame)[],
-    nonCollidable: [] as (Vase | Item | DeathAnim | PickableStone|FragilePlatform|Grass)[]
+    collidable: [] as (Platform | Frog | Cactus | Bird | BirdProjectile | FragilePlatform)[],
+    playerFriendly: [] as (Stone | Flame)[],
+    nonCollidable: [] as (Vase | Item | DeathAnim | PickableStone | FragilePlatform | Grass)[]
 }
+
+export const trackableObjects = [] as any[]
 
 export const spriteSheet = new Image()
 spriteSheet.src = "img/spritesheet.png"
@@ -84,7 +89,7 @@ function loadSprite(sprite: HTMLImageElement) {
     return new Promise((resolve, reject) => {
         if (sprite.complete) resolve(true)
         sprite.onload = () => {
-          
+
             resolve(true)
         }
     })
@@ -115,30 +120,33 @@ async function startGame() {
 
     // ! DELETE THIS IS ONLY FOR TESTS
     new BagOxygen()
-    new BagOxygen()
+    // new BagOxygen()
     new BagHat()
-   
-    
+    new BagHat()
+    new BagHat()
+    new BagHat()
+
+
     // animate game
     function startAnim() {
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
         app.c.fillStyle = "black"
         app.c.fillRect(0, 0, canvasProps.width, canvasProps.height)
-        
-        
-        
+
+
+
         // initialize renderer (it will automatically render new objects and delete unnecessary ones)
         renderer.trackRendering()
         renderer.updateGameObjects()
         player.update()
-        
-        
+
+
         setTimeout(() => {
             requestAnimationFrame(startAnim)
         }, app.canvasProps.rerenderStep)
     }
     startAnim()
-    
+
     // listen to keys pressed
     window.onkeydown = (e) => recognizePressedKeys(e)
     window.onkeyup = (e) => unbindPressedKeys(e)
@@ -163,19 +171,19 @@ function recognizePressedKeys(e: KeyboardEvent) {
 
     if (e.key === "e") {
         pressedKeys.e = true
-    }   
+    }
 }
 
 function unbindPressedKeys(e: KeyboardEvent) {
-    if (e.key === "ArrowRight"|| e.key === "d") {
+    if (e.key === "ArrowRight" || e.key === "d") {
         pressedKeys.right = false
     }
 
-    if (e.key === "ArrowLeft"|| e.key === "a") {
+    if (e.key === "ArrowLeft" || e.key === "a") {
         pressedKeys.left = false
     }
 
-    
+
     if (e.key === "ArrowUp" || e.key === "w") {
         pressedKeys.up = false
     }
@@ -186,24 +194,24 @@ function unbindPressedKeys(e: KeyboardEvent) {
 
     if (e.key === "e") {
         pressedKeys.e = false
-    }   
+    }
 }
 
 
 // if (!CONSTANTS.gameStarted) {
 //     const isMobile = mobileCheck()
-    
+
 //     if (!isMobile) {
 //         const information = document.createElement("p")
 //         information.innerText = "Press SPACEBAR to start game"
 //         CONSTANTS.loadingScreen.appendChild(information)
-        
+
 //         document.onkeydown = async (e) => {
 //             if (e.key === " ") {
 //                 // console.log(e.key, e.key === " ")
 //                 CONSTANTS.gameStarted = true
 //                 CONSTANTS.loadingScreen.style.display = "none"
-    
+
 //                 document.onkeydown = () => {
 //                     CONSTANTS.tutorialShown = false
 //                     CONSTANTS.hotkeysScreen.style.display = "none"
@@ -226,10 +234,10 @@ function unbindPressedKeys(e: KeyboardEvent) {
 
 //             information.onpointerenter = () => {
 //                 console.log('aaa');
-                
+
 //             }
 
-            
+
 //             console.log(information)
 //             CONSTANTS.loadingScreen.appendChild(information)
 //         }

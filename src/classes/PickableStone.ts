@@ -1,5 +1,5 @@
 import UUID from "../helpers/uuid"
-import { app, spriteSheet, informationManager, player, gameObjects, canvasProps, renderer } from "../main"
+import { app, spriteSheet, informationManager, player, gameObjects, canvasProps, renderer, trackableObjects } from "../main"
 import ImageMapper from "./ImageMapper"
 
 
@@ -12,20 +12,34 @@ class PickableStone {
     id: string
     type: "pickable stone"
     position: { x: number, y: number }
+    startPos: { x: number, y: number }
     width: number
     height: number
-    graphics: { cords: { x: number, y: number, height: number, width: number }}
+    graphics: { cords: { x: number, y: number, height: number, width: number } }
+    visible: boolean
 
     constructor(x: number, y: number) {
         this.id = UUID.genId()
         this.type = "pickable stone"
         this.width = CONSTANTS.size
         this.height = CONSTANTS.size
-        this.position = { x, y: canvasProps.height - y - this.height - 5}
-        this.graphics = { cords: ImageMapper.getGameStoneImageCords()}
+        this.position = { x, y: canvasProps.height - y - this.height - 5 }
+        this.startPos = { ...this.position }
+        this.graphics = { cords: ImageMapper.getGameStoneImageCords() }
+        this.visible = true
     }
 
     draw() {
+        if (this.position.x + this.width <= 0 || this.position.x >= canvasProps.width) {
+            if (this.visible) {
+                console.log("track", this.id)
+                this.visible = false
+                this.track()
+            }
+
+            return
+        }
+
         this.checkIfPlayerPicked()
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
@@ -48,6 +62,18 @@ class PickableStone {
 
         const myRendererIndex = renderer.breakPoints[renderer.currentBreakPoint].neutral.findIndex(e => e.id === this.id)
         if (myRendererIndex !== -1) renderer.breakPoints[renderer.currentBreakPoint].neutral.splice(myRendererIndex, 1)
+    }
+
+    track() {
+        const myIndex = gameObjects.nonCollidable.findIndex(p => p.id === this.id)
+        gameObjects.nonCollidable.splice(myIndex, 1)
+        trackableObjects.push(this)
+    }
+
+    untrack() {
+        gameObjects.nonCollidable.push(this)
+        const trackableIndex = trackableObjects.findIndex(p => p.id === this.id)
+        trackableObjects.splice(trackableIndex, 1)
     }
 }
 
