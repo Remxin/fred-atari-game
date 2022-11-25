@@ -40,7 +40,7 @@ body {
 #main {
   position: relative;
   border: 1px solid black;
-  min-width: 500px;
+  /* min-width: 500px; */
   min-height: 180px;
 }
 
@@ -55,7 +55,7 @@ body {
   height: 35vw;
   max-height: 250px;
   min-height: 180px;
-  min-width: 500px;
+  /* min-width: 500px; */
 }
 
 .row {
@@ -148,6 +148,7 @@ body {
   max-height: 150px;
   /* height: 30%; */
   aspect-ratio: 1 / 1;
+  max-width: 12%;
 }
 
 #oxygen img {
@@ -204,6 +205,7 @@ body {
   width: 88%;
   /* height: 50px; */
   height: 30%;
+  max-width: 88%;
 }
 
 #bag img {
@@ -421,7 +423,6 @@ body {
     position: absolute;
     bottom: 10%;
   
-    /* height: 25%; */
     width: 34%;
     max-height: 58%;
     background-color: pink;
