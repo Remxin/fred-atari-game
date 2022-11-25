@@ -30,20 +30,20 @@ class Vase {
         this.startPos = { ...this.position }
         this.getRandomItem()
         this.type = "vase"
-        this.visible = true
+        this.visible = false
+        this.checkVisibility()
     }
 
     draw() {
-        if (this.position.x + this.width <= 0 || this.position.x >= canvasProps.width) {
+        app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
+        if (this.position.x + this.width <= -200 || this.position.x >= canvasProps.width + 200) {
             if (this.visible) {
-                console.log("track", this.id)
                 this.visible = false
                 this.track()
             }
 
-            return
+
         }
-        app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
     getRandomItem() {
@@ -84,6 +84,13 @@ class Vase {
         // place item on it's cords
 
 
+    }
+
+    checkVisibility() {
+        if (this.position.x + this.width >= -300 || this.position.x <= canvasProps.width + 300) {
+            // this.untrack()
+            this.visible = true
+        } else { }
     }
 
     track() {

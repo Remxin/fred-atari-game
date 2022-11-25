@@ -22,6 +22,7 @@ import PickableStone from "./classes/PickableStone"
 import FragilePlatform from "./classes/FragilePlatform"
 import Grass from "./classes/Grass"
 import Enemy from "./classes/Enemy"
+import BagShield from "./classes/bagItems/BagShield"
 
 
 const CONSTANTS = {
@@ -116,15 +117,8 @@ async function startGame() {
     informationManager.updateOxygen(0)
     informationManager.updateStones(11)
     informationManager.updateLives(5)
-    // informationManager.resetItems()
 
-    // ! DELETE THIS IS ONLY FOR TESTS
-    new BagOxygen()
-    // new BagOxygen()
-    new BagHat()
-    new BagHat()
-    new BagHat()
-    new BagHat()
+
 
 
     // animate game
@@ -198,62 +192,62 @@ function unbindPressedKeys(e: KeyboardEvent) {
 }
 
 
-// if (!CONSTANTS.gameStarted) {
-//     const isMobile = mobileCheck()
+if (!CONSTANTS.gameStarted) {
+    const isMobile = mobileCheck()
 
-//     if (!isMobile) {
-//         const information = document.createElement("p")
-//         information.innerText = "Press SPACEBAR to start game"
-//         CONSTANTS.loadingScreen.appendChild(information)
+    if (!isMobile) {
+        const information = document.createElement("p")
+        information.innerText = "Press SPACEBAR to start game"
+        CONSTANTS.loadingScreen.appendChild(information)
 
-//         document.onkeydown = async (e) => {
-//             if (e.key === " ") {
-//                 // console.log(e.key, e.key === " ")
-//                 CONSTANTS.gameStarted = true
-//                 CONSTANTS.loadingScreen.style.display = "none"
+        document.onkeydown = async (e) => {
+            if (e.key === " ") {
+                // console.log(e.key, e.key === " ")
+                CONSTANTS.gameStarted = true
+                CONSTANTS.loadingScreen.style.display = "none"
 
-//                 document.onkeydown = () => {
-//                     CONSTANTS.tutorialShown = false
-//                     CONSTANTS.hotkeysScreen.style.display = "none"
-//                 }
-//                 startGame()
-//             }
-//         }
-//         } else {
-//             const information = document.createElement("button")
-//             information.innerText = "Click here to start!"
-//             information.classList.add("mobile-start-game")
-//             information.onpointerdown = () => {
-//                 console.log('aaa')
-//                 CONSTANTS.gameStarted = true
-//                 CONSTANTS.loadingScreen.style.display = "none"
-//                 CONSTANTS.tutorialShown = false
-//                 CONSTANTS.hotkeysScreen.style.display = "none"
-//                 startGame()
-//             }
+                document.onkeydown = () => {
+                    CONSTANTS.tutorialShown = false
+                    CONSTANTS.hotkeysScreen.style.display = "none"
+                }
+                startGame()
+            }
+        }
+    } else {
+        const information = document.createElement("button")
+        information.innerText = "Click here to start!"
+        information.classList.add("mobile-start-game")
+        information.onpointerdown = () => {
+            console.log('aaa')
+            CONSTANTS.gameStarted = true
+            CONSTANTS.loadingScreen.style.display = "none"
+            CONSTANTS.tutorialShown = false
+            CONSTANTS.hotkeysScreen.style.display = "none"
+            startGame()
+        }
 
-//             information.onpointerenter = () => {
-//                 console.log('aaa');
+        information.onpointerenter = () => {
+            console.log('aaa');
 
-//             }
-
-
-//             console.log(information)
-//             CONSTANTS.loadingScreen.appendChild(information)
-//         }
-// }
+        }
 
 
-// TODO: hash this and unhash next
-CONSTANTS.loadingScreen.style.display = "none"
-CONSTANTS.hotkeysScreen.style.display = "none"
-startGame()
+        console.log(information)
+        CONSTANTS.loadingScreen.appendChild(information)
+    }
+}
 
-// window.oncontextmenu = () => false
-// document.oncontextmenu = () => false
+window.oncontextmenu = () => false
+document.oncontextmenu = () => false
 
-// window.onpointerdown = () => false
-// document.onpointerdown = () => false
+window.onpointerdown = () => false
+document.onpointerdown = () => false
+
+// ! THIS IS FOR TESTS
+// CONSTANTS.loadingScreen.style.display = "none"
+// CONSTANTS.hotkeysScreen.style.display = "none"
+// startGame()
+
 
 
 

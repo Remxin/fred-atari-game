@@ -37,8 +37,10 @@ class BirdProjectile extends Enemy {
         if (this.position.y + this.height >= app.canvasProps.height) this.remove()
 
         for (let collidable of gameObjects.collidable) {
+            // console.log(gameObjects.collidable)
             if (collidable.type === "enemy") return
             if (this.position.y <= collidable.position.y + collidable.height && this.position.y + this.height >= collidable.position.y && this.position.x <= collidable.position.x + collidable.width && this.position.x + this.width >= collidable.position.x) {
+                // console.log('collision')
                 this.remove()
             }
         }

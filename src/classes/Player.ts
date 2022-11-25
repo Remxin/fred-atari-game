@@ -16,7 +16,7 @@ const startPos = { x: 100, y: 100 }
 const size = { w: 50, h: 90 }
 const weaponChangeTimeout = 500
 const stoneDelayValue = 1000
-let viewBreakPoints = { min: 400, max: 800 }
+let viewBreakPoints = { min: 300, max: 400 }
 const maxAnimValue = {
     move: 24, jump: 10000
 }
@@ -86,7 +86,7 @@ class Player implements PlayerInterface {
     draw() {
         let currSprite
 
-        if (this.alpha.in) currSprite = this.alpha.anim === 0 ? spriteSheet : brightSpriteSheet
+        if (this.alpha.in) currSprite = this.alpha.anim === 1 ? spriteSheet : brightSpriteSheet
         else currSprite = spriteSheet
 
 
@@ -266,22 +266,11 @@ class Player implements PlayerInterface {
         this.death = true
 
         setTimeout(() => {
-            // descrolling view
-            // const descrollValue = renderer.playerAbstractionPos.x - this.position.x
-            // for (let collidableObj of gameObjects.collidable) {
-            //     collidableObj.position.x += descrollValue
-            // }
-
-            // for (let nonCollidable of gameObjects.nonCollidable) {
-            //     nonCollidable.position.x += descrollValue
-            // }
-            // renderer.playerAbstractionPos = { ...startPos }
-
             renderer.descrollAll()
 
             // reseting stats
             this.position = { ...startPos }
-            this.velocity.y = velocity.y
+            this.velocity.y = 0
             this.floating.isfloating = true
             this.floating.direction = ""
 
@@ -375,7 +364,7 @@ class Player implements PlayerInterface {
     }
 
     paralaxMoveAll(direction: "left" | "right") {
-        // console.log(gameObjects.collidable)
+
         if (direction === "right") {
 
             for (let collidable of gameObjects.collidable) {
@@ -415,7 +404,7 @@ class Player implements PlayerInterface {
             for (let gameObj of gameObjects.collidable) {
                 if (gameObj.type === "platform") {
                     if (this.position.x < gameObj.position.x + gameObj.width && this.position.x + this.width >= gameObj.position.x && this.position.y < gameObj.position.y + gameObj.height && this.position.y + this.height > gameObj.position.y) {
-                        console.log('right')
+
                         // this.position.x = gameObj.position.x - this.width               
                         return true
 
@@ -429,7 +418,7 @@ class Player implements PlayerInterface {
             for (let gameObj of gameObjects.collidable) {
                 if (gameObj.type === 'platform') {
                     if (this.position.x <= gameObj.position.x + gameObj.width && this.position.x + this.width > gameObj.position.x && this.position.y < gameObj.position.y + gameObj.height && this.position.y + this.height > gameObj.position.y) {
-                        console.log('left')
+
                         return true
 
                     }

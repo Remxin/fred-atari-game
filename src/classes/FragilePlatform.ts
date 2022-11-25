@@ -30,7 +30,7 @@ class FragilePlatform {
         this.class = "fragile platform"
         this.broken = { level: CONSTANTS.brokeLevel, is: false }
         this.graphics = { cords: ImageMapper.getFragilePlatformImage(this.broken.is) }
-        this.visible = true
+        this.visible = false
     }
 
     draw() {
@@ -60,13 +60,22 @@ class FragilePlatform {
     }
 
     track() {
-        const myIndex = gameObjects.collidable.findIndex(p => p.id === this.id)
-        gameObjects.collidable.splice(myIndex, 1)
+        if (!this.broken) {
+            const myIndex = gameObjects.collidable.findIndex(p => p.id === this.id)
+            gameObjects.collidable.splice(myIndex, 1)
+        } else {
+            const myIndex = gameObjects.nonCollidable.findIndex(p => p.id === this.id)
+            gameObjects.nonCollidable.splice(myIndex, 1)
+        }
         trackableObjects.push(this)
     }
 
     untrack() {
-        gameObjects.collidable.push(this)
+        if (!this.broken) {
+            gameObjects.collidable.push(this)
+        } else {
+            gameObjects.nonCollidable.push(this)
+        }
         const trackableIndex = trackableObjects.findIndex(p => p.id === this.id)
         trackableObjects.splice(trackableIndex, 1)
     }

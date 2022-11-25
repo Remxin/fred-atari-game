@@ -30,14 +30,11 @@ class PickableStone {
     }
 
     draw() {
-        if (this.position.x + this.width <= 0 || this.position.x >= canvasProps.width) {
+        if (this.position.x + this.width <= -200 || this.position.x >= canvasProps.width + 200) {
             if (this.visible) {
-                console.log("track", this.id)
                 this.visible = false
                 this.track()
             }
-
-            return
         }
 
         this.checkIfPlayerPicked()

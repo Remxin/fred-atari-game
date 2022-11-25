@@ -20,7 +20,8 @@ body {
   justify-content: center;
   width: 100%;
   height: 100vh;
-  min-width: 500px;
+  /* min-width: 500px; */
+  max-width: 100vw;
 }
 
 #container {
@@ -29,11 +30,11 @@ body {
   justify-content: center;
   /* width: 100%; */
   height: 90%;
-  max-height: 90%;
+  max-height: 85%;
   flex-direction: column;
-  padding: 1%;
+  /* padding: 1%; */
   aspect-ratio: 1 / 1;
-  max-width: 100%;
+  max-width: 100vw;
 }
 
 #main {
@@ -125,7 +126,16 @@ body {
 }
 
 #game-over-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 20%;
+}
+
+#game-over-timer img {
+  width: 30%;
+  aspect-ratio: 1 / 1;
+  margin-right: 5px;
 }
 
 
@@ -349,6 +359,44 @@ body {
   font-weight: bold;
   border-radius: 15px;
 }
+
+.game-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+}
+
+.game-end * {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.game-end h2 {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.game-end p {
+  font-size: 26px;
+}
+
+.game-end button {
+  width: 160px;
+  height: 40px;
+  border: 1px solid white;
+  background-color: black;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
 
 
 @keyframes playerBlink {

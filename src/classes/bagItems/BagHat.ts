@@ -31,6 +31,7 @@ class BagHat extends BagItem {
                 clearInterval(expireInterval)
                 this.intervalIncrementer = 0
                 player.alpha.in = false
+                player.alpha.anim = 0
             }
             this.intervalIncrementer += 1
         }, 1000)

@@ -44,24 +44,32 @@ class Platform implements PlatformInterface {
         this.type = "platform"
         this.class = "platform"
         this.graphics = { cords: ImageMapper.getPlatformImageCords(type, length, turnDirection), type, length, turnDirection }
-        this.visible = true
+        this.visible = false
+        this.checkVisibility()
 
     }
 
     draw() {
-        if (this.position.x + this.width <= 0 || this.position.x >= canvasProps.width) {
+        if (this.position.x + this.width <= -300 || this.position.x >= canvasProps.width + 300) {
             if (this.visible) {
                 this.visible = false
                 this.track()
             }
 
-            return
         }
 
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
+
+
+
     }
 
-
+    checkVisibility() {
+        if (this.position.x + this.width >= -300 || this.position.x <= canvasProps.width + 300) {
+            // this.untrack()
+            this.visible = true
+        } else { }
+    }
 
     track() {
         const myIndex = gameObjects.collidable.findIndex(p => p.id === this.id)
@@ -73,6 +81,7 @@ class Platform implements PlatformInterface {
         gameObjects.collidable.push(this)
         const trackableIndex = trackableObjects.findIndex(p => p.id === this.id)
         trackableObjects.splice(trackableIndex, 1)
+        // this.visible = true
     }
 }
 
