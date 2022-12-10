@@ -17,8 +17,8 @@ npm run prod
 
 ### 🤖 **In future**
 - [x] mobile version with controllers
-- [ ] fixed background color
-- [ ] fixed platform gleaming
+- [x] fixed background color
+- [x] fixed platform gleaming
 ### 🖼️ **Images of the game** 
 
 ![](https://tagz.eu/download/games/screens/fred/1.png)
