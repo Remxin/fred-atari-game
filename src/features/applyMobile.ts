@@ -99,7 +99,7 @@ export const applyMobile = () => {
             gameDiv.appendChild(changeWeaponBtn)
 
 
-
+            console.log('jest')
             resolve(isMobile)
         } catch (err) {
             reject({ err })

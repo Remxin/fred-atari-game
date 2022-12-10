@@ -237,11 +237,11 @@ if (!CONSTANTS.gameStarted) {
     }
 }
 
-// window.oncontextmenu = () => false
-// document.oncontextmenu = () => false
+window.oncontextmenu = () => false
+document.oncontextmenu = () => false
 
-// window.onpointerdown = () => false
-// document.onpointerdown = () => false
+window.onpointerdown = () => false
+document.onpointerdown = () => false
 
 // ! THIS IS FOR TESTS
 // CONSTANTS.loadingScreen.style.display = "none"

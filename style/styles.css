@@ -305,6 +305,7 @@ body {
   display: block;
   position: absolute;
   /* background-color: red; */
+  /* background-color: "#ffffff"; */
   width: 10vw;
   height: 10vw;
   max-width: 80px;
@@ -312,7 +313,8 @@ body {
 }
 
 #left-button {
-  background: url('../img/arrow_left.png');
+  
+  background-image: url('../img/arrow_left.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -322,7 +324,7 @@ body {
 #right-button {
   transform: rotate(180deg);
   left: 12vw;
-  background: url('../img/arrow_left.png');
+  background-image: url('../img/arrow_left.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -331,7 +333,7 @@ body {
 #up-button {
   transform: rotate(90deg);
   right: 21vw;
-  background: url('../img/arrow_left.png');
+  background-image: url('../img/arrow_left.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -339,7 +341,7 @@ body {
 
 #attack-button {
   right: 32vw;
-  background: url('../img/fight.png');
+  background-image: url('../img/fight.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -347,7 +349,7 @@ body {
 
 #change-weapon-button {
   right: 10vw;
-  background: url('../img/change.png');
+  background-image: url('../img/change.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
