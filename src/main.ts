@@ -232,9 +232,18 @@ if (!CONSTANTS.gameStarted) {
         }
 
 
-        console.log(information)
+
         CONSTANTS.loadingScreen.appendChild(information)
     }
+    const link = document.createElement("a")
+    link.href = "https://github.com/Remxin/fred-atari-game"
+    link.innerText = "🔗 Github link 🔗"
+
+    const author = document.createElement("p")
+    author.innerText = "Created by Dawid Nabagło"
+    author.classList.add("author")
+    CONSTANTS.loadingScreen.appendChild(link)
+    CONSTANTS.loadingScreen.appendChild(author)
 }
 
 window.oncontextmenu = () => false
