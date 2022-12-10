@@ -1,5 +1,5 @@
 # 🎮 **Atari Fred Game** 🎮
-## On of the biggest Atari XL/XE hits now in a form of **web application**.
+## One of the biggest Atari XL/XE hits now in a form of **web application**.
 ## 📱 Now also on mobile! 
 \
 Page is **hosted** on: 
