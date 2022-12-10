@@ -32,11 +32,11 @@ class BagShield extends BagItem {
 
         const expiringInterval = setInterval(() => {
             this.expiresIn -= 1
-            player.alpha.anim === 1 ? player.alpha.anim -= 1 : player.alpha.anim +=1
-            
+            player.alpha.anim === 1 ? player.alpha.anim -= 1 : player.alpha.anim += 1
 
-            if (this.expiresIn < Math.round(CONSTANTS.expireValue /3)) {
-                if (!this.fadingInterval)  {
+
+            if (this.expiresIn < Math.round(CONSTANTS.expireValue / 3)) {
+                if (!this.fadingInterval) {
                     this.fadingInterval = setInterval(() => {
                         if (this.fadeOut) {
                             this.img.style.opacity = '0.2'
@@ -56,6 +56,7 @@ class BagShield extends BagItem {
                 clearInterval(this.fadingInterval)
                 this.remove()
                 player.alpha.in = false
+                player.alpha.anim = 0
             }
         }, 1000)
     }

@@ -19,8 +19,6 @@ class BagHat extends BagItem {
         this.fadeOut = false
         informationManager.addItem(this)
         this.img = informationManager.bag.itemsImgs.find((i) => i.alt === this.class)
-
-        console.log(this.img)
     }
 
     use() {
@@ -33,6 +31,7 @@ class BagHat extends BagItem {
                 clearInterval(expireInterval)
                 this.intervalIncrementer = 0
                 player.alpha.in = false
+                player.alpha.anim = 0
             }
             this.intervalIncrementer += 1
         }, 1000)

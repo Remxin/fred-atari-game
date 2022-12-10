@@ -1,5 +1,5 @@
 // ____ FEATURES ____
-import { applyMobile } from "./features/applyMobile"
+import { applyMobile, mobileCheck } from "./features/applyMobile"
 
 // ____ CLASSES ____
 import Player from "./classes/Player"
@@ -21,6 +21,8 @@ import DeathAnim from "./classes/DeathAnim"
 import PickableStone from "./classes/PickableStone"
 import FragilePlatform from "./classes/FragilePlatform"
 import Grass from "./classes/Grass"
+import Enemy from "./classes/Enemy"
+import BagShield from "./classes/bagItems/BagShield"
 
 
 const CONSTANTS = {
@@ -34,16 +36,22 @@ const canvas = document.getElementById("main") as HTMLCanvasElement
 const audioManager = new AudioManager()
 const playerStartPos = { x: 100, y: 100 }
 
+
+
 export const canvasProps = {
-    width: window.innerWidth - 5,
-    height: window.innerHeight - 250,
+    // height: window.innerWidth < 769 ? window.innerHeight * 1.4 : window.innerHeight - 250,
+    // width: window.innerWidth < 769 ? window.innerWidth * 2.4 : window.innerWidth,
+    height: 640,
+    width: 768,
+    // height: 768,
+    // width: 768,
     rerenderStep: 20 // higher = better performance
 }
 
 export const player = new Player(playerStartPos.x, playerStartPos.y, canvasProps.width)
 export const informationManager = new InformationManager()
-
 export const renderer = new Renderer(playerStartPos.x, playerStartPos.y)
+
 export const app = {
     canvas,
     c: canvas.getContext("2d"),
@@ -65,22 +73,24 @@ export const pressedKeys = {
 }
 
 export const gameObjects = {
-    collidable: [] as (Platform|Frog|Cactus|Bird|BirdProjectile|FragilePlatform)[],
-    playerFriendly: [] as (Stone|Flame)[],
-    nonCollidable: [] as (Vase | Item | DeathAnim | PickableStone|FragilePlatform|Grass)[]
+    collidable: [] as (Platform | Frog | Cactus | Bird | BirdProjectile | FragilePlatform)[],
+    playerFriendly: [] as (Stone | Flame)[],
+    nonCollidable: [] as (Vase | Item | DeathAnim | PickableStone | FragilePlatform | Grass)[]
 }
 
+export const trackableObjects = [] as any[]
+
 export const spriteSheet = new Image()
-spriteSheet.src = "../img/spritesheet.png"
+spriteSheet.src = "img/spritesheet.png"
 
 export const brightSpriteSheet = new Image()
-brightSpriteSheet.src = "../img/spritesheet_bright.png"
+brightSpriteSheet.src = "img/spritesheet_bright.png"
 
 function loadSprite(sprite: HTMLImageElement) {
     return new Promise((resolve, reject) => {
         if (sprite.complete) resolve(true)
         sprite.onload = () => {
-          
+
             resolve(true)
         }
     })
@@ -107,34 +117,30 @@ async function startGame() {
     informationManager.updateOxygen(0)
     informationManager.updateStones(11)
     informationManager.updateLives(5)
-    // informationManager.resetItems()
 
-    // ! DELETE THIS IS ONLY FOR TESTS
-    new BagOxygen()
-    new BagOxygen()
-    // new BagHat()
-   
-    
+
+
+
     // animate game
     function startAnim() {
         app.c.clearRect(0, 0, app.canvas.width, app.canvas.height)
         app.c.fillStyle = "black"
         app.c.fillRect(0, 0, canvasProps.width, canvasProps.height)
-        
-        
-        
+
+
+
         // initialize renderer (it will automatically render new objects and delete unnecessary ones)
         renderer.trackRendering()
         renderer.updateGameObjects()
         player.update()
-        
-        
+
+
         setTimeout(() => {
             requestAnimationFrame(startAnim)
         }, app.canvasProps.rerenderStep)
     }
     startAnim()
-    
+
     // listen to keys pressed
     window.onkeydown = (e) => recognizePressedKeys(e)
     window.onkeyup = (e) => unbindPressedKeys(e)
@@ -159,19 +165,19 @@ function recognizePressedKeys(e: KeyboardEvent) {
 
     if (e.key === "e") {
         pressedKeys.e = true
-    }   
+    }
 }
 
 function unbindPressedKeys(e: KeyboardEvent) {
-    if (e.key === "ArrowRight"|| e.key === "d") {
+    if (e.key === "ArrowRight" || e.key === "d") {
         pressedKeys.right = false
     }
 
-    if (e.key === "ArrowLeft"|| e.key === "a") {
+    if (e.key === "ArrowLeft" || e.key === "a") {
         pressedKeys.left = false
     }
 
-    
+
     if (e.key === "ArrowUp" || e.key === "w") {
         pressedKeys.up = false
     }
@@ -182,25 +188,66 @@ function unbindPressedKeys(e: KeyboardEvent) {
 
     if (e.key === "e") {
         pressedKeys.e = false
-    }   
+    }
 }
 
 
 if (!CONSTANTS.gameStarted) {
-    document.onkeydown = async (e) => {
-        if (e.key === " ") {
-            // console.log(e.key, e.key === " ")
+    const isMobile = mobileCheck()
+
+    if (!isMobile) {
+        const information = document.createElement("p")
+        information.innerText = "Press SPACEBAR to start game"
+        CONSTANTS.loadingScreen.appendChild(information)
+
+        document.onkeydown = async (e) => {
+            if (e.key === " ") {
+                // console.log(e.key, e.key === " ")
+                CONSTANTS.gameStarted = true
+                CONSTANTS.loadingScreen.style.display = "none"
+
+                document.onkeydown = () => {
+                    CONSTANTS.tutorialShown = false
+                    CONSTANTS.hotkeysScreen.style.display = "none"
+                }
+                startGame()
+            }
+        }
+    } else {
+        const information = document.createElement("button")
+        information.innerText = "Click here to start!"
+        information.classList.add("mobile-start-game")
+        information.onpointerdown = () => {
+            console.log('aaa')
             CONSTANTS.gameStarted = true
             CONSTANTS.loadingScreen.style.display = "none"
-
-            document.onkeydown = () => {
-                CONSTANTS.tutorialShown = false
-                CONSTANTS.hotkeysScreen.style.display = "none"
-            }
+            CONSTANTS.tutorialShown = false
+            CONSTANTS.hotkeysScreen.style.display = "none"
             startGame()
         }
+
+        information.onpointerenter = () => {
+            console.log('aaa');
+
+        }
+
+
+        console.log(information)
+        CONSTANTS.loadingScreen.appendChild(information)
     }
 }
+
+window.oncontextmenu = () => false
+document.oncontextmenu = () => false
+
+window.onpointerdown = () => false
+document.onpointerdown = () => false
+
+// ! THIS IS FOR TESTS
+// CONSTANTS.loadingScreen.style.display = "none"
+// CONSTANTS.hotkeysScreen.style.display = "none"
+// startGame()
+
 
 
 

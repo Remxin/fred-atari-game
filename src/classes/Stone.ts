@@ -1,12 +1,13 @@
+import { nodeModuleNameResolver } from "../../node_modules/typescript/lib/typescript"
 import { player, app, gameObjects, informationManager, spriteSheet } from "../main"
 import ImageMapper from "./ImageMapper"
 
 const CONSTS = {
     stoneW: 15,
     stoneH: 15,
-    stoneVelocity: { x: 32, y: -6},
-    minStoneVelocity: { x: 10, y: 18},
-    airResistance: { x: 2, y: 2}
+    stoneVelocity: { x: 32, y: -6 },
+    minStoneVelocity: { x: 10, y: 18 },
+    airResistance: { x: 2, y: 2 }
 
 }
 
@@ -15,16 +16,18 @@ class Stone {
     height: number
     position: { x: number, y: number }
     velocity: { x: number, y: number }
+    startPos: { x: number, y: number }
     turnDirection: "left" | "right"
     class: "stone"
-    graphics: { cords: { x: number, y: number, height: number, width: number}}
+    graphics: { cords: { x: number, y: number, height: number, width: number } }
 
     constructor() {
         this.width = CONSTS.stoneW
         this.turnDirection = player.turnDirection
         const startX = this.turnDirection === "left" ? player.position.x - this.width : player.position.x + player.width
         this.height = CONSTS.stoneH
-        this.position = { x: startX, y: player.position.y + Math.round(player.height/4) }
+        this.position = { x: startX, y: player.position.y + Math.round(player.height / 4) }
+        this.startPos = { ...this.position }
         this.velocity = { x: CONSTS.stoneVelocity.x, y: CONSTS.stoneVelocity.y }
         this.class = "stone"
         this.graphics = { cords: ImageMapper.getStoneImageCords() }
@@ -32,23 +35,23 @@ class Stone {
 
     draw() {
         this.checkCollision()
-        
-        
-        
+
+
+
         if (this.velocity.x > CONSTS.minStoneVelocity.x * 2) {
             this.velocity.x -= CONSTS.airResistance.x
         }
-        
+
         if (this.velocity.y < CONSTS.minStoneVelocity.y) {
             this.velocity.y += CONSTS.airResistance.y
         }
-        
+
         if (this.turnDirection === "right") {
             this.position.x += this.velocity.x
         } else {
-            this.position.x -= this.velocity.x 
+            this.position.x -= this.velocity.x
         }
-        
+
         if (this.velocity.y > -4) {
             this.position.y += this.velocity.y
         }
@@ -65,7 +68,7 @@ class Stone {
         }
 
         for (let gameObj of gameObjects.collidable) {
-            if (this.position.x + this.width + Math.round(this.velocity.x/2)>= gameObj.position.x && this.position.x <= gameObj.position.x + gameObj.width && this.position.y >= gameObj.position.y && this.position.y + this.width <= gameObj.position.y + gameObj.height) {
+            if (this.position.x + this.width >= gameObj.position.x && this.position.x <= gameObj.position.x + gameObj.width && this.position.y + this.height >= gameObj.position.y && this.position.y <= gameObj.position.y + gameObj.height) {
                 this.remove()
                 player.stoneThrown = false
 
@@ -77,16 +80,15 @@ class Stone {
         }
 
         for (let nonCollidable of gameObjects.nonCollidable) {
-            if (nonCollidable.type !== "vase") return
-
-            if (this.position.x + this.width + Math.round(this.velocity.x/2)>= nonCollidable.position.x && this.position.x <= nonCollidable.position.x + nonCollidable.width && this.position.y >= nonCollidable.position.y && this.position.y + this.width <= nonCollidable.position.y + nonCollidable.height) {
+            if (nonCollidable.type !== "vase") continue
+            if (this.position.x + this.width >= nonCollidable.position.x && this.position.x <= nonCollidable.position.x + nonCollidable.width && this.position.y + this.height >= nonCollidable.position.y && this.position.y <= nonCollidable.position.y + nonCollidable.height) {
                 this.remove()
                 player.stoneThrown = false
                 nonCollidable.remove()
             }
-        }   
+        }
 
-        
+
     }
 
     remove() {

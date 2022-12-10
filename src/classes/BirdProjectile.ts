@@ -9,19 +9,21 @@ const CONSTANTS = {
 }
 
 class BirdProjectile extends Enemy {
-    graphics: { cords: { x: number, y: number, height: number, width: number}}
+    graphics: { cords: { x: number, y: number, height: number, width: number } }
+    startPos: { x: number, y: number }
     velocity: { y: number }
     class: "bird projectile"
     type: "enemy"
     constructor(x: number, y: number) {
         super(x, y)
-        this.position = { x, y}
+        this.position = { x, y }
+        this.startPos = { ...this.position }
         this.width = CONSTANTS.width
         this.height = CONSTANTS.height
         this.class = "bird projectile"
         this.type = "enemy"
         this.velocity = CONSTANTS.startVelocity
-        this.graphics = { cords: ImageMapper.getBirdProjectileImageCords()}
+        this.graphics = { cords: ImageMapper.getBirdProjectileImageCords() }
     }
 
     update() {
@@ -35,8 +37,10 @@ class BirdProjectile extends Enemy {
         if (this.position.y + this.height >= app.canvasProps.height) this.remove()
 
         for (let collidable of gameObjects.collidable) {
+            // console.log(gameObjects.collidable)
             if (collidable.type === "enemy") return
             if (this.position.y <= collidable.position.y + collidable.height && this.position.y + this.height >= collidable.position.y && this.position.x <= collidable.position.x + collidable.width && this.position.x + this.width >= collidable.position.x) {
+                // console.log('collision')
                 this.remove()
             }
         }

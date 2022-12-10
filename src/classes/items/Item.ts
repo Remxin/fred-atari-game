@@ -11,23 +11,27 @@ export type itemType = "stone stack" | "cactus" | "oxygen" | "hat" | "shield" | 
 
 class Item {
     id: string
-    position: { x: number, y: number}
+    position: { x: number, y: number }
     width: number
     height: number
     class: itemType
     type: "item"
-    graphics: { cords: { x: number, y: number, width: number, height: number }}
+    graphics: { cords: { x: number, y: number, width: number, height: number } }
 
-    constructor (x: number, y: number, type: itemType) {
+    constructor(x: number, y: number, type: itemType) {
         this.class = type
         this.id = UUID.genId()
-        this.position = { x, y}
+        this.position = { x, y }
         this.width = 50
         this.height = 50
         this.type = "item"
         this.graphics = { cords: ImageMapper.getItemImageCords(this.class) }
 
         if (this.class === "extra life") this.width = 25
+
+        setTimeout(() => {
+            this.remove()
+        }, 10000)
     }
 
     draw() {
@@ -43,7 +47,7 @@ class Item {
 
     private pick() {
         this.remove()
-        
+
         let bagItem = null
         if (this.class === "stone stack") bagItem = new BagStoneStack()
         else if (this.class === "oxygen") bagItem = new BagOxygen()

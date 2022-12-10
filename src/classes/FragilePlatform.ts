@@ -1,9 +1,9 @@
 import UUID from "../helpers/uuid"
-import { app, gameObjects, spriteSheet } from "../main"
+import { app, canvasProps, gameObjects, spriteSheet, trackableObjects } from "../main"
 import ImageMapper from "./ImageMapper"
 
 const CONSTANTS = {
-    pW: 60,
+    pW: 70,
     pH: 60,
     brokeLevel: 30
 }
@@ -13,20 +13,24 @@ class FragilePlatform {
     height: number
     width: number
     position: { x: number, y: number }
-    graphics: { cords: {x: number, y: number, width: number, height: number}} 
+    startPos: { x: number, y: number }
+    graphics: { cords: { x: number, y: number, width: number, height: number } }
     class: "fragile platform"
     type: "platform"
-    broken: { level: number, is: boolean}
+    broken: { level: number, is: boolean }
+    visible: boolean
 
     constructor(x: number, y: number) {
         this.id = UUID.genId()
-        this.position = { x, y}
         this.width = CONSTANTS.pW
         this.height = CONSTANTS.pH
+        this.position = { x, y: canvasProps.height - y - this.height }
+        this.startPos = { ...this.position }
         this.type = "platform"
-        this.class ="fragile platform"
-        this.broken = { level: CONSTANTS.brokeLevel, is: false}
-        this.graphics = { cords: ImageMapper.getFragilePlatformImage(this.broken.is)}
+        this.class = "fragile platform"
+        this.broken = { level: CONSTANTS.brokeLevel, is: false }
+        this.graphics = { cords: ImageMapper.getFragilePlatformImage(this.broken.is) }
+        this.visible = false
     }
 
     draw() {
@@ -41,7 +45,30 @@ class FragilePlatform {
         // delete from collidable and add to non collidable
         const myIndex = gameObjects.collidable.findIndex(i => i.id === this.id)
         gameObjects.collidable.splice(myIndex, 1)
-        gameObjects.nonCollidable.push(this)
+
+        const nonCollidableIndex = gameObjects.nonCollidable.findIndex((o) => o.id === this.id)
+        if (nonCollidableIndex === -1) gameObjects.nonCollidable.push(this)
+    }
+
+    track() {
+        if (!this.broken) {
+            const myIndex = gameObjects.collidable.findIndex(p => p.id === this.id)
+            gameObjects.collidable.splice(myIndex, 1)
+        } else {
+            const myIndex = gameObjects.nonCollidable.findIndex(p => p.id === this.id)
+            gameObjects.nonCollidable.splice(myIndex, 1)
+        }
+        trackableObjects.push(this)
+    }
+
+    untrack() {
+        if (!this.broken) {
+            gameObjects.collidable.push(this)
+        } else {
+            gameObjects.nonCollidable.push(this)
+        }
+        const trackableIndex = trackableObjects.findIndex(p => p.id === this.id)
+        trackableObjects.splice(trackableIndex, 1)
     }
 
 }

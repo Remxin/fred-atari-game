@@ -1,16 +1,17 @@
-import { app, canvasProps, renderer, gameObjects, informationManager } from "../main"
+import { app, canvasProps, renderer, gameObjects, informationManager, trackableObjects } from "../main"
 import UUID from "../helpers/uuid"
 import DeathAnim from "./DeathAnim"
+import Renderer from "./Renderer"
 
 abstract class Enemy {
     id: String
-    position: { x: number, y: number}
+    position: { x: number, y: number }
     width: number
     height: number
     deleted: boolean
 
+
     constructor(x: number, y: number) {
-        // console.log();
         this.position = { x, y: canvasProps.height - y }
         this.id = UUID.genId()
         this.deleted = false
@@ -32,6 +33,19 @@ abstract class Enemy {
         const deathAnim = new DeathAnim(this.position.x, this.position.y, "enemy")
         gameObjects.nonCollidable.push(deathAnim)
 
+    }
+
+    track() {
+        const myIndex = gameObjects.collidable.findIndex(p => p.id === this.id)
+        gameObjects.collidable.splice(myIndex, 1)
+        trackableObjects.push(this)
+    }
+
+    untrack() {
+        //@ts-ignore
+        gameObjects.collidable.push(this)
+        const trackableIndex = trackableObjects.findIndex(p => p.id === this.id)
+        trackableObjects.splice(trackableIndex, 1)
     }
 }
 
