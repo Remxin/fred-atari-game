@@ -36,14 +36,7 @@ class Vase {
 
     draw() {
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
-        if (this.position.x + this.width <= -200 || this.position.x >= canvasProps.width + 200) {
-            if (this.visible) {
-                this.visible = false
-                this.track()
-            }
 
-
-        }
     }
 
     getRandomItem() {
@@ -87,10 +80,6 @@ class Vase {
     }
 
     checkVisibility() {
-        if (this.position.x + this.width >= -300 || this.position.x <= canvasProps.width + 300) {
-            // this.untrack()
-            this.visible = true
-        } else { }
     }
 
     track() {

@@ -34,15 +34,6 @@ class FragilePlatform {
     }
 
     draw() {
-        if (this.position.x + this.width <= 0 || this.position.x >= canvasProps.width) {
-            if (this.visible) {
-                this.visible = false
-                this.track()
-            }
-
-            return
-        }
-
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 

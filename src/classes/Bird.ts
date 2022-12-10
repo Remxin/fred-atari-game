@@ -48,17 +48,6 @@ class Bird extends Enemy {
     }
 
     update() {
-        if (this.position.x + this.width <= -200 || this.position.x >= canvasProps.width + 200) {
-            if (this.visible) {
-                this.visible = false
-                this.track()
-            }
-
-            return
-        }
-
-
-
         if (this.movement.direction === 'right' && this.movement.isMoving) {
             this.position.x += this.velocity.x
             this.abstractPos.x += this.velocity.x

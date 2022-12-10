@@ -265,8 +265,10 @@ class Player implements PlayerInterface {
         gameObjects.nonCollidable.push(deathAnim)
         this.death = true
 
-        setTimeout(() => {
-            renderer.descrollAll()
+        setTimeout(async () => {
+            await renderer.descrollAll()
+            renderer.descroll.step = 1000
+            renderer.trackInvisible(true)
 
             // reseting stats
             this.position = { ...startPos }
@@ -278,6 +280,7 @@ class Player implements PlayerInterface {
             informationManager.updateLives(informationManager.lives.value - 1)
             informationManager.resetRunScore()
             this.death = false
+
         }, 2000)
     }
 

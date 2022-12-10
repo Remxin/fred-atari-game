@@ -61,7 +61,7 @@ class Renderer implements RendererInterface {
                     new Platform(7180, 60, "b", "s", "right"), new Platform(7180, 120, "b", "s", "left"), new Platform(7180, 180, "b", "s", "right"), new Platform(7180, 240, "b", "s", "left"), new Platform(7180, 300, "b", "s", "right"), new Platform(7180, 360, "b", "s", "left")
                 ],
                 enemies: [
-                    new Cactus(-250, 0, "l", ""), new Cactus(-295, 80, "s", "right"), new Cactus(-205, 50, "s", "left"), new Cactus(250, 0, "s", ""), new Cactus(1180, -30, "m", ""), new Cactus(1220, -2, "s", "left"),
+                    new Cactus(-250, 0, "l", ""), new Cactus(-295, 80, "s", "right"), new Cactus(-205, 50, "s", "left"), new Cactus(250, 0, "s", ""), new Cactus(1180, -40, "m", ""), new Cactus(1220, -12, "s", "left"),
                     new Frog(1850, 225, -250, 0), new Frog(1700, 0, 0, 300), new Cactus(2620, -10, "m", ""), new Cactus(2660, 70, "m", "left"), new Frog(2410, 0, 0, 200), new Frog(2310, 0, 0, 200), new Frog(2750, 0, 0, 300), new Frog(2800, 300, 0, 250), new Cactus(3100, 0, "l", ""), new Cactus(3370, 0, "m", ""), new Cactus(3410, 50, "s", "left"), new Cactus(3750, 0, "sm", ""), new Frog(3900, 0, 0, 100), new Cactus(4000, -35, "s", ""), new Cactus(4150, 0, "s", "right"), new Cactus(4190, -30, "m", ""),
                     new Frog(4240, 200, 0, 20), new Bird(3670, 400, 0, 400, false), new Frog(4570, 300, 0, 200), new Frog(4570, 100, 0, 400), new Bird(4520, 10, 0, 200, false), new Bird(4720, 10, 0, 300), new Bird(5050, 10, 0, 100, false), new Frog(5150, 250, 0, 0), new Cactus(5200, 0, "m", ""), new Cactus(5240, 50, "m", "left"),
                     new Frog(5300, 0, 0, 0), new Cactus(6000, 0, "s", ""), new Bird(6200, 100, 0, 200, false), new Cactus(6550, 0, "sm", ""), new Cactus(6600, 0, "sm", ""), new Cactus(6650, 0, "sm", ""), new Cactus(6700, 0, "sm", ""), new Cactus(6750, 0, "sm", ""), new Cactus(6800, 0, "sm", ""), new Cactus(6850, 0, "sm", ""), new Cactus(6900, 0, "sm", ""), new Cactus(6950, 0, "sm", ""), new Cactus(7000, 0, "sm", ""), new Cactus(7050, 0, "sm", ""), new Cactus(7100, 0, "sm", ""), new Bird(6800, 500, 0, 300, true), new Bird(6500, 600, 0, 200, true), new Bird(6600, 450, 0, 400), new Bird(6500, 400, 0, 150, true), new Bird(6800, 550, 0, 100, true), new Bird(6750, 600, -400, 200, true), new Bird(7000, 650, -400, 0, true)
@@ -79,6 +79,12 @@ class Renderer implements RendererInterface {
                     new Grass(4290, 0, "l", false), new Grass(4620, 140, "s", false), new Grass(4670, 140, "s", false), new Grass(4950, 0, "l", false),
                     new Grass(5460, 320, "s", false), new Grass(5600, 140, "s", false), new Grass(5850, 180, "s", false), new Grass(6020, 215, "s", true), new Grass(6430, 290, "s", false), new Grass(6650, 160, "s", false), new Grass(6850, 160, "l", false), new Grass(7100, 160, "s", false)
                 ]
+
+                // ! FOR TESTS
+                // platforms: [new Platform(100, 100, "b", "s", "left"), new Platform(200, 100, "b", "s", "left")],
+                // enemies: [],
+                // neutral: [new Vase(1500, 0)],
+                // decorations: []
             },
             // another levels
 
@@ -193,35 +199,78 @@ class Renderer implements RendererInterface {
 
 
     descrollAll() {
+        return new Promise((resolve, reject) => {
+            this.playerAbstractionPos = { ...startPos }
+            for (let breakPointData of this.breakPoints) {
+                for (let dec of breakPointData.decorations) {
+                    dec.position = { ...dec.startPos }
+                }
+                for (let enemy of breakPointData.enemies) {
+                    enemy.position = { ...enemy.startPos }
+                }
+                for (let neutral of breakPointData.neutral) {
+                    neutral.position = { ...neutral.startPos }
 
-        this.playerAbstractionPos = { ...startPos }
+                }
+                for (let platform of breakPointData.platforms) {
+                    platform.position = { ...platform.startPos }
+                }
+
+
+            }
+
+            for (let trackable of trackableObjects) {
+                trackable.position = { ...trackable.startPos }
+            }
+            setTimeout(() => {
+                this.trackInvisible(true)
+            }, 0)
+            resolve(true)
+        })
+
+
+    }
+
+    trackInvisible(force = false) {
+        if (!force) {
+            if (this.descroll.step < 20) return this.descroll.step += 1
+        }
+
+        // applying to invisible there //! tests
         for (let breakPointData of this.breakPoints) {
-            breakPointData.decorations.forEach(dec => {
-                dec.position = { ...dec.startPos }
-            })
-            breakPointData.enemies.forEach(enemy => {
-                enemy.position = { ...enemy.startPos }
-            })
+            for (let dec of breakPointData.decorations) {
+                if (dec.position.x + dec.width < -300 && dec.position.x > canvasProps.width + 300) {
+                    dec.track()
+                    dec.visible = false
+                }
+            }
+            for (let enemy of breakPointData.enemies) {
+                if (enemy.position.x + enemy.width < -300 && enemy.position.x > canvasProps.width + 300) {
+                    enemy?.track()
+                    enemy.visible = false
+                }
+            }
+            for (let neutral of breakPointData.neutral) {
+                if (neutral.position.x + neutral.width < -300 && neutral.position.x > canvasProps.width + 300) {
+                    //@ts-ignore
+                    neutral?.track()
+                    //@ts-ignore
+                    neutral?.visible = false
+                }
 
-            breakPointData.neutral.forEach(neutral => {
-                neutral.position = { ...neutral.startPos }
-            })
-
-            breakPointData.platforms.forEach(platform => {
-                platform.position = { ...platform.startPos }
-            })
+            }
+            for (let platform of breakPointData.platforms) {
+                if (platform.position.x + platform.width < -300 && platform.position.x > canvasProps.width + 300) {
+                    platform.track()
+                    platform.visible = false
+                }
+            }
 
 
         }
 
-    }
-
-    trackInvisible() {
-        // console.log(this.playerAbstractionPos.x)
-        if (this.descroll.step < 5) return this.descroll.step += 1
-
         for (let trackable of trackableObjects) {
-            if (trackable.position.x + trackable.width >= 0 && trackable.position.x <= canvasProps.width) {
+            if (trackable.position.x + trackable.width >= -300 && trackable.position.x <= canvasProps.width + 300) {
                 trackable.untrack()
                 trackable.visible = true
             }

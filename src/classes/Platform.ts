@@ -50,18 +50,7 @@ class Platform implements PlatformInterface {
     }
 
     draw() {
-        if (this.position.x + this.width <= -300 || this.position.x >= canvasProps.width + 300) {
-            if (this.visible) {
-                this.visible = false
-                this.track()
-            }
-
-        }
-
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
-
-
-
     }
 
     checkVisibility() {

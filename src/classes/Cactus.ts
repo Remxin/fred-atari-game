@@ -71,14 +71,6 @@ class Cactus extends Enemy implements CactusInterface {
     }
 
     draw() {
-        if (this.position.x + this.width <= -200 || this.position.x >= canvasProps.width + 200) {
-            if (this.visible) {
-                this.visible = false
-                this.track()
-            }
-
-
-        }
 
         // app.c.fillStyle = "green"
         // app.c.fillRect(this.position.x, this.position.y, this.width, this.height)

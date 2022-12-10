@@ -63,14 +63,6 @@ class Frog extends Enemy implements FrogInterface {
    }
 
    update() {
-      if (this.position.x + this.width <= -200 || this.position.x >= canvasProps.width + 200) {
-         if (this.visible) {
-            this.visible = false
-            this.track()
-         }
-
-         return
-      }
 
 
 
