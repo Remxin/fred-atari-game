@@ -30,8 +30,6 @@ class PickableStone {
     }
 
     draw() {
-
-        this.checkIfPlayerPicked()
         app.c.drawImage(spriteSheet, this.graphics.cords.x, this.graphics.cords.y, this.graphics.cords.width, this.graphics.cords.height, this.position.x, this.position.y, this.width, this.height)
     }
 
@@ -41,11 +39,6 @@ class PickableStone {
         this.remove()
     }
 
-    checkIfPlayerPicked() {
-        if (this.position.x <= player.position.x + player.width && this.position.x + this.width >= player.position.x && this.position.y + this.height >= player.position.y && this.position.y <= player.position.y + player.height) {
-            this.use()
-        }
-    }
 
     remove() {
         const myGameIndex = gameObjects.nonCollidable.findIndex(e => e.id === this.id)

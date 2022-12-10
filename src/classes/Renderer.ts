@@ -122,6 +122,15 @@ class Renderer implements RendererInterface {
             informationManager.startWinTimer()
         }
 
+        // watch stones
+        for (let neutral of gameObjects.nonCollidable) {
+            if (neutral.type == "pickable stone") {
+                if (neutral.position.x <= player.position.x + player.width && neutral.position.x + neutral.width >= player.position.x && neutral.position.y + neutral.height >= player.position.y && neutral.position.y <= player.position.y + player.height) {
+                    neutral.use()
+                }
+            }
+        }
+
 
         if (!this.currentBreakPointRendered) {
             this.currentBreakPointRendered = true
@@ -233,7 +242,7 @@ class Renderer implements RendererInterface {
 
     trackInvisible(force = false) {
         if (!force) {
-            if (this.descroll.step < 20) return this.descroll.step += 1
+            if (this.descroll.step < 30) return this.descroll.step += 1
         }
 
         // applying to invisible there //! tests
