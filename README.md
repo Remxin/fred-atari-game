@@ -22,4 +22,6 @@ npm run prod
 ### 🖼️ **Images of the game** 
 
 ![](https://tagz.eu/download/games/screens/fred/1.png)
-![](https://radioszczecin.pl/public/212/212_154780803210.jpg)
+![](https://github.com/Remxin/fred-atari-game/blob/master/md/mobile-fred.png?raw=true)
+![](https://github.com/Remxin/fred-atari-game/blob/master/md/fred.png?raw=true)
+![](https://github.com/Remxin/fred-atari-game/blob/master/md/fred2.png?raw=true)
