@@ -3,7 +3,7 @@
 ## 📱 Now also on mobile! 
 \
 Page is **hosted** on: 
-## 🌐 [Link to game](http://atari-fred.dnabaglo.ct8.pl) 🌐 
+## 🌐 [Play the game!](http://atari-fred.remxin.ct8.pl) 🌐 
 
 ### **Launch the application on local machine:**  
 - For developement mode
